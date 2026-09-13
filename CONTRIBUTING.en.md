@@ -10,7 +10,7 @@ The thresholds in this project are calibrated on **sentences Claude Code actuall
 
 So the most valuable contribution here is not code. It is a sentence.
 
-- Saw Claude write awkward Korean? Send it through [the report form](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml). Paste the original, uncorrected.
+- Saw Claude write awkward Korean? Send it through [the report form](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml). Paste the original, uncorrected.
 - Did the hook flag a perfectly normal sentence? Send that too. False positives are worse than misses, because they make people turn the checker off.
 
 Reported sentences become regression tests in `tests/ground-truth.json` or `clean.json`.
@@ -20,8 +20,8 @@ Reported sentences become regression tests in `tests/ground-truth.json` or `clea
 There is no build step.
 
 ```bash
-git clone https://github.com/IsthisLee/claude-korean-writing
-cd claude-korean-writing
+git clone https://github.com/IsthisLee/korean-writing
+cd korean-writing
 git config core.hooksPath .githooks     # pre-commit checks: personal-info guard and Korean doc check
 
 python3 tests/test_posttooluse.py       # hook regression tests

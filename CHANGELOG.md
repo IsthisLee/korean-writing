@@ -14,6 +14,7 @@
 
 ### 변경
 
+- **저장소와 마켓플레이스 이름에서 `claude-` 를 뗐습니다.** 저장소는 `IsthisLee/korean-writing`, 마켓플레이스는 `korean-writing` 입니다. 새로 까는 사람은 `claude plugin marketplace add IsthisLee/korean-writing` 과 `claude plugin install korean-writing@korean-writing` 을 씁니다. 이미 깐 사람은 할 일이 없습니다. 격리한 HOME 에서 옛 이름으로 깔아 둔 뒤 매니페스트의 이름만 바꾸고 `claude plugin marketplace update` 를 돌리니 등록 이름은 `claude-korean-writing` 그대로였고 플러그인도 `korean-writing@claude-korean-writing` 으로 켜져 있었습니다. 새 이름으로 깨끗한 HOME 에 깔아 훅 매니페스트까지 들어가는 것도 확인했습니다. 플러그인 이름과 스킬 이름, 설정 파일 `.korean-writing.json` 은 그대로입니다. 옛 저장소 주소는 GitHub 이 새 주소로 넘겨줍니다
 - **README 맨 위를 배너 대신 한 장짜리 그림으로 바꿨습니다.** Claude Code가 실제로 쓴 문장과 규칙대로 고친 문장을 규칙 코드와 함께 큰 글씨로 보여 주고 처음 작성할 때·저장할 때·수정할 때 세 시점을 아래에 둡니다. `tools/render-hero.py` 가 한국어·영어, 어두운 테마·밝은 테마 네 장을 그리고 왼쪽 문장이 정답 데이터에 없으면 멈춥니다. 옛 배너 넷은 지웠습니다
 - **「같은 요청, 두 결과」 그림을 공지에서 칼럼으로 바꾸고 판정자가 짚은 문장만 큰 글씨로 실었습니다.** 공지 예시는 스킬 쪽이 줄글이라 읽기 어렵고 글씨가 작았습니다. 릴리스 노트로도 붙여 봤지만 판정이 순서에 따라 갈려 쓰지 않았습니다(`EVALUATION.md` J)
 - **전후 비교 그림을 같은 자리끼리 짝지어 다시 그렸습니다.** 두 글에서 짚은 문장을 각각 따로 늘어놓으니 무엇과 무엇을 견주는지 보이지 않았습니다. 이제 여는 대목·같은 사실을 말하는 대목·제안하는 대목·마지막 문장을 줄마다 나란히 놓고 판정문에 그대로 나온 표현에만 「판정자가 짚은 곳」 을 답니다. 표시한 표현이 `judge.json` 에 없으면 그림을 그리다 멈춥니다. 한쪽에만 있던 「본문 뒤 안내」는 뺐습니다. 판정에 넣는 본문에서도 걷어내는 부분이라 그림에 실을 자리가 아닙니다
@@ -228,10 +229,10 @@
 - README 한국어판·영어판, 훅 출력 데모 이미지(`docs/hook-output.svg`)
 - 제3자 고지(`NOTICE.md`): im-not-ai·claude-forge·k-skill·agent-toolkit 의 원 저작권 표시
 
-[Unreleased]: https://github.com/IsthisLee/claude-korean-writing/compare/v2.1.0...HEAD
-[2.1.0]: https://github.com/IsthisLee/claude-korean-writing/compare/v2.0.0...v2.1.0
-[2.0.0]: https://github.com/IsthisLee/claude-korean-writing/compare/v1.3.0...v2.0.0
-[1.3.0]: https://github.com/IsthisLee/claude-korean-writing/compare/v1.2.0...v1.3.0
-[1.2.0]: https://github.com/IsthisLee/claude-korean-writing/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/IsthisLee/claude-korean-writing/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/IsthisLee/claude-korean-writing/releases/tag/v1.0.0
+[Unreleased]: https://github.com/IsthisLee/korean-writing/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/IsthisLee/korean-writing/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/IsthisLee/korean-writing/compare/v1.3.0...v2.0.0
+[1.3.0]: https://github.com/IsthisLee/korean-writing/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/IsthisLee/korean-writing/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/IsthisLee/korean-writing/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/IsthisLee/korean-writing/releases/tag/v1.0.0

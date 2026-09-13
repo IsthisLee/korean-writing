@@ -10,7 +10,7 @@
 
 그래서 가장 값진 기여는 코드가 아니라 문장입니다.
 
-- Claude 가 쓴 어색한 한국어를 봤다면 [어색한 문장 제보](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml) 로 보내 주세요. 고치지 않은 원문 그대로가 필요합니다.
+- Claude 가 쓴 어색한 한국어를 봤다면 [어색한 문장 제보](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml) 로 보내 주세요. 고치지 않은 원문 그대로가 필요합니다.
 - 훅이 멀쩡한 문장을 잡았다면 그것도 같은 양식으로 보내 주세요. 오탐은 미탐보다 심각합니다. 사람이 검사기를 꺼버리게 만들기 때문입니다.
 
 제보한 문장은 `tests/ground-truth.json` 이나 `clean.json` 에 들어가 회귀 테스트가 됩니다.
@@ -20,8 +20,8 @@
 빌드가 없습니다. 받아서 바로 돌리면 됩니다.
 
 ```bash
-git clone https://github.com/IsthisLee/claude-korean-writing
-cd claude-korean-writing
+git clone https://github.com/IsthisLee/korean-writing
+cd korean-writing
 git config core.hooksPath .githooks  # 커밋 직전 검사: 개인 식별 정보 가드와 한국어 문서 검사
 
 python3 tests/test_posttooluse.py    # 훅 회귀 테스트

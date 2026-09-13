@@ -16,15 +16,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/validate.yml"><img alt="Validate" src="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/validate.yml/badge.svg?branch=main"></a>
-  <a href="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/codeql.yml/badge.svg?branch=main"></a>
-  <a href="https://scorecard.dev/viewer/?uri=github.com/IsthisLee/claude-korean-writing"><img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/IsthisLee/claude-korean-writing/badge"></a>
+  <a href="https://github.com/IsthisLee/korean-writing/actions/workflows/validate.yml"><img alt="Validate" src="https://github.com/IsthisLee/korean-writing/actions/workflows/validate.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/IsthisLee/korean-writing/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/IsthisLee/korean-writing/actions/workflows/codeql.yml/badge.svg?branch=main"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/IsthisLee/korean-writing"><img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/IsthisLee/korean-writing/badge"></a>
   <img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue.svg">
   <img alt="Claude Code Plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2">
   <img alt="version" src="https://img.shields.io/badge/version-2.1.0-lightgrey">
   <img alt="network" src="https://img.shields.io/badge/network-none-success">
   <img alt="platform" src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey">
-  <a href="https://github.com/IsthisLee/claude-korean-writing/commits/main"><img alt="last commit" src="https://img.shields.io/github/last-commit/IsthisLee/claude-korean-writing"></a>
+  <a href="https://github.com/IsthisLee/korean-writing/commits/main"><img alt="last commit" src="https://img.shields.io/github/last-commit/IsthisLee/korean-writing"></a>
 </p>
 
 <p align="center">
@@ -107,7 +107,7 @@ Claude Code의 한국어는 문법이 틀리지 않습니다. 그런데도 읽�
 
 1. 설치합니다. 명령 두 줄이고 설정할 것은 없습니다.
    ```bash
-   claude plugin marketplace add IsthisLee/claude-korean-writing
+   claude plugin marketplace add IsthisLee/korean-writing
    claude plugin install korean-writing
    ```
 2. 새 세션을 열고 아무 글이나 부탁합니다. `korean-writing` 규칙으로 쓸지 묻는 확인이 뜨고 허락하면 그 규칙으로 씁니다.
@@ -119,14 +119,14 @@ Claude Code의 한국어는 문법이 틀리지 않습니다. 그런데도 읽�
 ## 설치
 
 ```bash
-claude plugin marketplace add IsthisLee/claude-korean-writing
+claude plugin marketplace add IsthisLee/korean-writing
 claude plugin install korean-writing
 ```
 
 `claude plugin list`에 `korean-writing`이 `enabled`로 보이면 됩니다. 새 버전은 `claude plugin update korean-writing`으로 받습니다. 받아 둔 저장소 경로를 마켓플레이스로 등록해도 됩니다. 사내 사본이나 포크를 쓸 때입니다.
 
 ```bash
-claude plugin marketplace add /경로/claude-korean-writing
+claude plugin marketplace add /경로/korean-writing
 claude plugin install korean-writing
 ```
 
@@ -144,7 +144,7 @@ claude plugin install korean-writing
 작성 규칙과 글자 수 스킬은 [Agent Skills](https://agentskills.io/specification) 형식이라 Codex·Cursor·Gemini CLI 같은 다른 에이전트에도 깔립니다. [Skills CLI](https://skills.sh)가 저장소에서 스킬을 찾아 넣습니다.
 
 ```bash
-npx skills add IsthisLee/claude-korean-writing -s korean-writing -s korean-character-count -g
+npx skills add IsthisLee/korean-writing -s korean-writing -s korean-character-count -g
 ```
 
 훅 둘과 윤문 파이프라인은 Claude Code 에서만 돕니다. 훅은 Claude Code 의 훅 이벤트에 걸리고 윤문은 Claude Code 서브에이전트를 부르기 때문입니다. 그래서 다른 에이전트에서는 쓸 때의 규칙과 글자 수 세기만 남습니다. 2026-09-11 에 격리한 HOME 에서 Codex·Cursor 용으로 깔아 두 스킬의 파일이 들어가고 글자 수 스크립트가 그 자리에서 도는 것까지 확인했습니다. 각 에이전트 안에서 스킬이 뜨는지는 확인하지 못했습니다. `korean-writing` 스킬은 플러그인 폴더를 통째로 스킬 폴더로 쓰므로 훅과 윤문 파일도 함께 복사되지만 다른 에이전트는 그 파일을 쓰지 않습니다.
@@ -587,13 +587,13 @@ fluent-korean과는 맡는 시점이 겹치지 않아 같이 설치해도 됩니
 
 ## 기여
 
-절차는 [CONTRIBUTING.md](./CONTRIBUTING.md)에 있습니다. 가장 값진 기여는 코드가 아니라 문장입니다. Claude Code가 쓴 어색한 한국어를 봤거나 훅이 멀쩡한 문장을 잡았다면 [어색한 문장 제보](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml) 양식으로 고치지 않은 원문 그대로 보내 주세요. 제보한 문장은 정답 데이터나 정상 문장에 들어가 회귀 테스트가 됩니다. 버그 신고와 판정 규칙 제안 양식도 있고 쓰는 법을 묻거나 사례를 나누는 자리는 [Discussions](https://github.com/IsthisLee/claude-korean-writing/discussions)입니다.
+절차는 [CONTRIBUTING.md](./CONTRIBUTING.md)에 있습니다. 가장 값진 기여는 코드가 아니라 문장입니다. Claude Code가 쓴 어색한 한국어를 봤거나 훅이 멀쩡한 문장을 잡았다면 [어색한 문장 제보](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml) 양식으로 고치지 않은 원문 그대로 보내 주세요. 제보한 문장은 정답 데이터나 정상 문장에 들어가 회귀 테스트가 됩니다. 버그 신고와 판정 규칙 제안 양식도 있고 쓰는 법을 묻거나 사례를 나누는 자리는 [Discussions](https://github.com/IsthisLee/korean-writing/discussions)입니다.
 
 작업을 시작하면 기준선부터 잡습니다.
 
 ```bash
-git clone https://github.com/IsthisLee/claude-korean-writing.git
-cd claude-korean-writing
+git clone https://github.com/IsthisLee/korean-writing.git
+cd korean-writing
 python3 tests/test_posttooluse.py
 plugin/scripts/check.sh --all
 ```
@@ -617,7 +617,7 @@ GitHub 릴리스 자체는 이 노트북에서 만들지 않습니다. 태그가
 
 ```bash
 gh release download v2.1.0 -p '*.zip'
-gh attestation verify korean-writing-v2.1.0.zip -R IsthisLee/claude-korean-writing
+gh attestation verify korean-writing-v2.1.0.zip -R IsthisLee/korean-writing
 claude --plugin-url ./korean-writing-v2.1.0.zip
 ```
 

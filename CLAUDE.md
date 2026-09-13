@@ -39,7 +39,7 @@ CI 의 `설치본 경계` 작업이 테스트·실험 산출물·CI 설정·관�
 
 ```bash
 HOME=/tmp/kw-home claude plugin marketplace add "$PWD"
-HOME=/tmp/kw-home claude plugin install korean-writing@claude-korean-writing
+HOME=/tmp/kw-home claude plugin install korean-writing@korean-writing
 find /tmp/kw-home/.claude/plugins/cache -type f | wc -l    # 설치본 파일 수
 ```
 

@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         규칙은 실측으로 정합니다. 근거 없는 임계 조정은 오탐을 조용히 늘립니다.
-        배경은 [EVALUATION.md](https://github.com/IsthisLee/claude-korean-writing/blob/main/EVALUATION.md) 에 있습니다.
+        배경은 [EVALUATION.md](https://github.com/IsthisLee/korean-writing/blob/main/EVALUATION.md) 에 있습니다.
   - type: dropdown
     id: direction
     attributes:

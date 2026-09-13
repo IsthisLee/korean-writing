@@ -9,11 +9,11 @@
 | 설치와 사용법을 모르겠다                        | [README](README.md) 의 설치 절부터 봅니다                                                                        |
 | 훅이 왜 이 문장을 걸었는지 모르겠다             | [EVALUATION.md](EVALUATION.md) 에 판정 규칙 K1~K10 과 각각의 실측 근거가 있습니다                                |
 | 훅을 끄고 싶다                                  | `/plugin` 에서 `edit_check` 를 끕니다. 환경변수도 듣습니다([SECURITY.md](SECURITY.md))                          |
-| 사람이 쓴 문장을 훅이 잘못 걸었다               | [오탐 이슈](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml)          |
-| 훅이 놓친 AI 티가 있다                          | [규칙 제안 이슈](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=rule.yml)                 |
-| 훅이나 스크립트가 죽는다                        | [버그 이슈](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=bug.yml)                       |
-| 취약점을 찾았다                                 | 공개 이슈로 올리지 말고 [비공개 신고](https://github.com/IsthisLee/claude-korean-writing/security/advisories/new)  |
-| 규칙을 어떻게 잡을지 의논하고 싶다              | [Discussions](https://github.com/IsthisLee/claude-korean-writing/discussions)                                    |
+| 사람이 쓴 문장을 훅이 잘못 걸었다               | [오탐 이슈](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml)          |
+| 훅이 놓친 AI 티가 있다                          | [규칙 제안 이슈](https://github.com/IsthisLee/korean-writing/issues/new?template=rule.yml)                 |
+| 훅이나 스크립트가 죽는다                        | [버그 이슈](https://github.com/IsthisLee/korean-writing/issues/new?template=bug.yml)                       |
+| 취약점을 찾았다                                 | 공개 이슈로 올리지 말고 [비공개 신고](https://github.com/IsthisLee/korean-writing/security/advisories/new)  |
+| 규칙을 어떻게 잡을지 의논하고 싶다              | [Discussions](https://github.com/IsthisLee/korean-writing/discussions)                                    |
 | 고쳐서 보내고 싶다                              | [CONTRIBUTING.md](CONTRIBUTING.md)                                                                               |
 
 ## 이슈를 열 때 넣어 주시면 좋은 것
@@ -37,11 +37,11 @@ Where to go depends on what you need. Please pick from this list before opening 
 | Installing or using the plugin                | Start with the install section of the [README](README.en.md)                                                        |
 | Not sure why the hook flagged a sentence      | [EVALUATION.md](EVALUATION.md) lists rules K1–K10 and the measurements behind each                                  |
 | You want to turn the hook off                 | Toggle `edit_check` in `/plugin`. Environment variables work too ([SECURITY.md](SECURITY.md))                     |
-| The hook flagged human-written prose          | [False positive](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml)        |
-| The hook missed an AI tell                    | [Rule proposal](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=rule.yml)                     |
-| A hook or script crashes                      | [Bug report](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=bug.yml)                         |
-| You found a vulnerability                     | Do not open a public issue. [Report privately](https://github.com/IsthisLee/claude-korean-writing/security/advisories/new) |
-| You want to discuss how a rule should work    | [Discussions](https://github.com/IsthisLee/claude-korean-writing/discussions)                                       |
+| The hook flagged human-written prose          | [False positive](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml)        |
+| The hook missed an AI tell                    | [Rule proposal](https://github.com/IsthisLee/korean-writing/issues/new?template=rule.yml)                     |
+| A hook or script crashes                      | [Bug report](https://github.com/IsthisLee/korean-writing/issues/new?template=bug.yml)                         |
+| You found a vulnerability                     | Do not open a public issue. [Report privately](https://github.com/IsthisLee/korean-writing/security/advisories/new) |
+| You want to discuss how a rule should work    | [Discussions](https://github.com/IsthisLee/korean-writing/discussions)                                       |
 | You want to send a patch                      | [CONTRIBUTING.en.md](CONTRIBUTING.en.md)                                                                            |
 
 ## What helps in an issue

@@ -16,15 +16,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/validate.yml"><img alt="Validate" src="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/validate.yml/badge.svg?branch=main"></a>
-  <a href="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/IsthisLee/claude-korean-writing/actions/workflows/codeql.yml/badge.svg?branch=main"></a>
-  <a href="https://scorecard.dev/viewer/?uri=github.com/IsthisLee/claude-korean-writing"><img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/IsthisLee/claude-korean-writing/badge"></a>
+  <a href="https://github.com/IsthisLee/korean-writing/actions/workflows/validate.yml"><img alt="Validate" src="https://github.com/IsthisLee/korean-writing/actions/workflows/validate.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/IsthisLee/korean-writing/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/IsthisLee/korean-writing/actions/workflows/codeql.yml/badge.svg?branch=main"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/IsthisLee/korean-writing"><img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/IsthisLee/korean-writing/badge"></a>
   <img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue.svg">
   <img alt="Claude Code Plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2">
   <img alt="version" src="https://img.shields.io/badge/version-2.1.0-lightgrey">
   <img alt="network" src="https://img.shields.io/badge/network-none-success">
   <img alt="platform" src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey">
-  <a href="https://github.com/IsthisLee/claude-korean-writing/commits/main"><img alt="last commit" src="https://img.shields.io/github/last-commit/IsthisLee/claude-korean-writing"></a>
+  <a href="https://github.com/IsthisLee/korean-writing/commits/main"><img alt="last commit" src="https://img.shields.io/github/last-commit/IsthisLee/korean-writing"></a>
 </p>
 
 <p align="center">
@@ -107,7 +107,7 @@ This output goes back to Claude too. Claude Code shows the stderr of a PostToolU
 
 1. Install. Two commands, nothing to configure.
    ```bash
-   claude plugin marketplace add IsthisLee/claude-korean-writing
+   claude plugin marketplace add IsthisLee/korean-writing
    claude plugin install korean-writing
    ```
 2. Open a new session and ask for any piece of text. A prompt asks whether to apply the `korean-writing` rules; allow it and the text follows them.
@@ -119,14 +119,14 @@ This output goes back to Claude too. Claude Code shows the stderr of a PostToolU
 ## Install
 
 ```bash
-claude plugin marketplace add IsthisLee/claude-korean-writing
+claude plugin marketplace add IsthisLee/korean-writing
 claude plugin install korean-writing
 ```
 
 When `claude plugin list` shows `korean-writing` as `enabled`, you are done. New versions come with `claude plugin update korean-writing`. A local checkout can be registered as a marketplace too, for an internal copy or a fork.
 
 ```bash
-claude plugin marketplace add /path/to/claude-korean-writing
+claude plugin marketplace add /path/to/korean-writing
 claude plugin install korean-writing
 ```
 
@@ -144,7 +144,7 @@ There are no packages to download. CI runs the same checks on macOS and Linux, a
 The writing rules and the character-count skill follow the [Agent Skills](https://agentskills.io/specification) format, so they also install into other agents such as Codex, Cursor and Gemini CLI. The [Skills CLI](https://skills.sh) finds them in the repository.
 
 ```bash
-npx skills add IsthisLee/claude-korean-writing -s korean-writing -s korean-character-count -g
+npx skills add IsthisLee/korean-writing -s korean-writing -s korean-character-count -g
 ```
 
 The two hooks and the polishing pipeline run only in Claude Code: the hooks attach to Claude Code's hook events, and polishing calls Claude Code subagents. Other agents get the writing rules and the character count, nothing more. On 2026-09-11 both skills were installed for Codex and Cursor into an isolated HOME; their files landed and the character-count script ran from where it was installed. Whether each agent then loads the skills was not checked. The `korean-writing` skill uses the whole plugin folder as its skill folder, so the hook and polishing files are copied along; other agents do not use them.
@@ -566,13 +566,13 @@ It has not been tried. The hooks are bash scripts, so Git Bash or WSL has to be 
 
 ## Contributing
 
-The procedure is in [CONTRIBUTING.en.md](./CONTRIBUTING.en.md). The most valuable contribution is not code but sentences. If you have seen Claude Code write awkward Korean, or the hook flag a perfectly fine sentence, send the unedited original through the [awkward sentence report](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml) form. Reported sentences go into the ground truth or the clean set and become regression tests. There are separate forms for bug reports and rule proposals, and [Discussions](https://github.com/IsthisLee/claude-korean-writing/discussions) is the place for questions and examples.
+The procedure is in [CONTRIBUTING.en.md](./CONTRIBUTING.en.md). The most valuable contribution is not code but sentences. If you have seen Claude Code write awkward Korean, or the hook flag a perfectly fine sentence, send the unedited original through the [awkward sentence report](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml) form. Reported sentences go into the ground truth or the clean set and become regression tests. There are separate forms for bug reports and rule proposals, and [Discussions](https://github.com/IsthisLee/korean-writing/discussions) is the place for questions and examples.
 
 The first step is a baseline run.
 
 ```bash
-git clone https://github.com/IsthisLee/claude-korean-writing.git
-cd claude-korean-writing
+git clone https://github.com/IsthisLee/korean-writing.git
+cd korean-writing
 python3 tests/test_posttooluse.py
 plugin/scripts/check.sh --all
 ```
@@ -596,7 +596,7 @@ You can try the zip for one session without installing it, and verify where it c
 
 ```bash
 gh release download v2.1.0 -p '*.zip'
-gh attestation verify korean-writing-v2.1.0.zip -R IsthisLee/claude-korean-writing
+gh attestation verify korean-writing-v2.1.0.zip -R IsthisLee/korean-writing
 claude --plugin-url ./korean-writing-v2.1.0.zip
 ```
 
