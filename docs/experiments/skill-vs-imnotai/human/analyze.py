@@ -60,16 +60,21 @@ def agree(a, b):
 
 
 def humans(folder):
+    # 축은 둘이다. choice 는 자연스러움(AI 판정과 같은 기준)이고 structure 는 글의 짜임새다.
+    # 한 쌍에서 두 축의 답이 갈릴 수 있다. 갈린 쌍의 수 자체가 결과다.
     mapping = json.loads((HERE / "mapping.json").read_text(encoding="utf-8"))["pairs"]
-    by_rater = collections.defaultdict(dict)
+    axes = {"choice": collections.defaultdict(dict), "structure": collections.defaultdict(dict)}
     for f in pathlib.Path(folder).rglob("*.json"):
         d = json.loads(f.read_text(encoding="utf-8"))
         d = d.get("data", d)
-        pair, choice, rater = d.get("pair"), d.get("choice"), d.get("rater")
-        if pair not in mapping or choice not in ("A", "B", "tie") or not rater:
+        pair, rater = d.get("pair"), d.get("rater")
+        if pair not in mapping or not rater:
             continue
-        by_rater[rater][pair] = "tie" if choice == "tie" else mapping[pair][choice]
-    return by_rater
+        for axis, by_rater in axes.items():
+            v = d.get(axis)
+            if v in ("A", "B", "tie"):
+                by_rater[rater][pair] = "tie" if v == "tie" else mapping[pair][v]
+    return axes["choice"], axes["structure"]
 
 
 def main():
@@ -86,20 +91,45 @@ def main():
                 s, n = agree(judges[names[x]], judges[names[y]])
                 print(f"{names[x]} ↔ {names[y]}: {s}/{n}")
     if len(sys.argv) > 2:
-        raters = humans(sys.argv[2])
-        print(f"\n== 사람 평가 (평가자 {len(raters)}명)")
+        raters, structs = humans(sys.argv[2])
+
+        def majority_of(per_rater):
+            votes = collections.defaultdict(collections.Counter)
+            for v in per_rater.values():
+                for i, c in v.items():
+                    votes[i][c] += 1
+            out = {}
+            for i, cnt in votes.items():
+                top = cnt.most_common()
+                out[i] = top[0][0] if len(top) == 1 or top[0][1] > top[1][1] else "split"
+            return out
+
+        print(f"\n== 사람 평가: 자연스러움 (평가자 {len(raters)}명)")
         for r, v in raters.items():
             summary(f"평가자 {r} ({len(v)}쌍)", v)
-        votes = collections.defaultdict(collections.Counter)
-        for v in raters.values():
-            for i, c in v.items():
-                votes[i][c] += 1
-        majority = {}
-        for i, cnt in votes.items():
-            top = cnt.most_common()
-            majority[i] = top[0][0] if len(top) == 1 or top[0][1] > top[1][1] else "split"
-        summary("사람 다수 의견", majority)
-        print("\n== 사람 다수 의견과 AI 판정의 일치 (둘 다 확정한 쌍 가운데)")
+        majority = majority_of(raters)
+        summary("다수 의견", majority)
+
+        if structs:
+            print(f"\n== 사람 평가: 글의 짜임새 (평가자 {len(structs)}명)")
+            for r, v in structs.items():
+                summary(f"평가자 {r} ({len(v)}쌍)", v)
+            maj_struct = majority_of(structs)
+            summary("다수 의견", maj_struct)
+
+            print("\n== 두 축이 갈린 쌍 (평가자별로 같은 쌍의 두 답을 견줌)")
+            tot = split = 0
+            for r, v in raters.items():
+                s = structs.get(r, {})
+                both = [i for i in v if i in s]
+                diff = [i for i in both if v[i] != s[i]]
+                tot += len(both)
+                split += len(diff)
+                if both:
+                    print(f"평가자 {r}: {len(diff)}/{len(both)} 갈림" + (f" ({', '.join(sorted(diff))})" if diff else ""))
+            print(f"합계: {split}/{tot} 쌍에서 자연스러움과 짜임새의 답이 달랐다")
+
+        print("\n== 사람 다수 의견(자연스러움)과 AI 판정의 일치 (둘 다 확정한 쌍 가운데)")
         for name, v in judges.items():
             s, n = agree(majority, v)
             print(f"{name}: {s}/{n}")
