@@ -22,7 +22,7 @@ BASE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$BASE/../../.." && pwd)"
 PROMPTS="$REPO/docs/experiments/always-on/prompts"
 
-ARM_A="${KW_ARM_A:-style:$REPO/plugin/output-styles/korean-writing.md}"
+ARM_A="${KW_ARM_A:-style:$REPO/docs/experiments/output-style/korean-writing.md}"
 ARM_B="${KW_ARM_B:-none}"
 LABEL_A="${KW_LABEL_A:-A}"
 LABEL_B="${KW_LABEL_B:-B}"

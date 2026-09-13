@@ -1,6 +1,6 @@
 # output style 이 답변의 세부를 떨어뜨리는가
 
-이 폴더는 `plugin/output-styles/korean-writing.md` 를 켠 답변이 아무것도 켜지 않은 답변만큼 세부를 담는지 잽니다. 결과와 판단은 [EVALUATION.md](../../../EVALUATION.md) 에 남깁니다.
+이 폴더는 `docs/experiments/output-style/korean-writing.md` 를 켠 답변이 아무것도 켜지 않은 답변만큼 세부를 담는지 잽니다. 결과와 판단은 [EVALUATION.md](../../../EVALUATION.md) 에 남깁니다.
 
 ## 왜 재는가
 
@@ -13,7 +13,7 @@ output style 은 주입보다 개입이 큽니다. 기본 지시에 더하는 �
 | 조건 | 내용 |
 | --- | --- |
 | A | 아무것도 켜지 않음. 기준 |
-| O | `plugin/output-styles/korean-writing.md` 를 켠 세션 |
+| O | `docs/experiments/output-style/korean-writing.md` 를 켠 세션 |
 | B | 제거된 상시 주입 규칙(`detail-retention/injection/rules/always-on-removed.md`). H13 의 B 와 같은 조건 |
 | N | B 와 길이가 비슷한 중립 메모(`.../rules/neutral.md`) |
 
@@ -40,7 +40,7 @@ LLM 을 부르므로 CI 에 넣지 않습니다. 계정 사용량이 떨어지�
 `rival.sh` 는 조건 둘을 받아 블라인드로 붙입니다. 받는 조건은 `none`(아무 지침 없음), `style:<파일>`(그 파일을 output style 로 켬), `rewrite:<지침파일>`(지침 없이 초안을 쓴 뒤 그 지침으로 고쳐 씀) 셋입니다.
 
 ```bash
-KW_ARM_A="style:$PWD/plugin/output-styles/korean-writing.md" \
+KW_ARM_A="style:$PWD/docs/experiments/output-style/korean-writing.md" \
 KW_ARM_B="style:/경로/남의-스타일.md" \
 KW_LABEL_A=korean-writing KW_LABEL_B=상대이름 \
 docs/experiments/output-style/rival.sh

@@ -51,7 +51,7 @@ A prompt cannot patch this reliably, and polishing a finished draft leaves frami
 
 | Moment                                                        | What covers it                                                                                           | When it runs                             | Where the rules live                     |
 | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ---------------------------------------- |
-| **When first written**<br>Slack, mail, reports, READMEs | The `korean-writing` skill writes to the rules from the first line; you are asked first when Claude calls it on its own                                       | When you ask for text                    | `plugin/SKILL.md`                        |
+| **When first written**<br>Slack, mail, reports, READMEs | The `korean-writing` skill writes to the rules from the first line                                        | When you type `/korean-writing`          | `plugin/SKILL.md`                        |
 | **On save**<br>anything that lands as `.md`                   | A PostToolUse hook checks what was just written and hands the findings back to Claude in the same turn   | Right after `Edit`, `Write`, `MultiEdit` | `plugin/hooks-handlers/posttooluse.sh`   |
 | **When revised**<br>someone else's draft, an old document | The polishing pipeline fixes the style and leaves the facts alone                                        | When you ask for a touch-up              | `plugin/skills/humanize-korean/SKILL.md` |
 
@@ -130,11 +130,11 @@ The writing rules and the character-count skill follow the [Agent Skills](https:
 npx skills add IsthisLee/korean-writing -s korean-writing -s korean-character-count -g
 ```
 
-The two hooks and the polishing pipeline run only in Claude Code: the hooks attach to Claude Code's hook events, and polishing calls Claude Code subagents. Other agents get the writing rules and the character count, nothing more.
+The check hook and the polishing pipeline run only in Claude Code: the hook attaches to Claude Code's hook events, and polishing calls Claude Code subagents. Other agents get the writing rules and the character count, nothing more.
 
 ## Usage
 
-Talk to Claude Code as usual; the skills load from the request, and `korean-writing` asks before it applies. These lines can be pasted as they are.
+Talk to Claude Code as usual; polishing and character counting load from the request, and `/korean-writing` writes under the rules when you call it. These lines can be pasted as they are.
 
 ```
 운영팀에 보낼 옵션 변경 안내문 써줘. 슬랙에 캐주얼하게.      (a casual Slack notice to the ops team about the option change)
@@ -148,29 +148,22 @@ Here is what loads on its own, when, and what to type to call it by name.
 
 | What                             | Runs on its own when                                          | Direct call                                                      |
 | -------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| The `korean-writing` skill       | A writing request, after you confirm it                       | `/korean-writing`; typing it skips the question                  |
+| The `korean-writing` skill       | Never on its own; it has to be called by name                 | `/korean-writing`                                                |
 | Polishing                        | "AI 티 없애줘", "번역투 고쳐줘" and similar requests           | `/korean-writing:humanize [text or file path]`                   |
 | A second polishing pass          | Never on its own; it has to be called by name                 | `/korean-writing:humanize-redo [instruction]`                    |
 | The check hook                   | Right after `Edit`, `Write` or `MultiEdit` touches a `.md`    | `/korean-writing:check FILE...`                                   |
 | Character counting               | "500자 이내로", "글자 수 세줘" and similar requests            | `/korean-writing:korean-character-count`                         |
-| The output style                 | Every answer once you turn it on; off by default               | `/config` → Output style → `korean-writing`                      |
 
-The two hooks have no name to call: they run when their condition is met and stay quiet otherwise. The two polishing entry points (`humanize`, `humanize-redo`) run only when typed, and in exchange they cost nothing in always-on context.
+The check hook has no name to call: it runs when its condition is met and stays quiet otherwise. The writing skill (`korean-writing`) and the two polishing entry points (`humanize`, `humanize-redo`) run only when typed, and in exchange they cost nothing in always-on context.
 
-### Why it asks before writing
-
-When Claude calls `korean-writing` on its own, it asks in Korean right before writing. It shows in one line what it is about to write and offers 「적용」 (apply), 「적용하고 설명은 넉넉히」 (apply, and keep the explanations generous) or 「적용 안 함」 (don't apply). Choosing not to apply does not stop the work; Claude carries on without the rules.
-
-It asks because the rules make text shorter. Dates, numbers and conditions written into the request come through, but the side explanations Claude adds on its own shrink under the rules. For a document that needs those side explanations, choose 「적용하고 설명은 넉넉히」. The measurement is in [EVALUATION.md](EVALUATION.md) J3 (Korean).
-
-Typing `/korean-writing` yourself, or asking for it by name ("korean-writing 스킬로 써줘"), applies it without asking. The check hook that runs on save follows this answer: choose 「적용 안 함」 and the file you were writing gets no check notices either, so the plugin stops pushing rules you just turned down.
+The style of ordinary answers is left to whichever output style you choose. Since 2026-09-14 this plugin no longer calls the writing skill on its own and no longer ships an output style. Why is recorded in [CHANGELOG.md](CHANGELOG.md).
 
 ### Getting the best text
 
 1. **Put the facts in the request.** Dates, numbers, conditions and the audience come through even with the rules on.
 2. **State the length if it matters.** Text written under the rules tends to come out shorter than asked; ask for more if it falls short.
 3. **Attach a sample of your own writing if you have a voice.** The skill follows the sample's endings and sentence length before its own rules.
-4. **Choose 「적용」 when asked.** For a document that is only useful with its side explanations, choose 「적용하고 설명은 넉넉히」; for a formal document whose wording must stay as written, choose 「적용 안 함」.
+4. **Call `/korean-writing` to write under the rules.** The skill does not load on its own. For a formal document whose wording must stay as written, simply do not call it.
 5. **Have it saved as a `.md` file.** The check hook hands back each flagged spot with its line number and Claude fixes it in the same turn.
 6. **Polish drafts that already exist with `/korean-writing:humanize`.** For new text, writing under the rules from the start works better than writing first and polishing afterwards ([Verification](#verification)).
 
@@ -182,10 +175,9 @@ It can be switched off at several scopes, and individual rules can be turned off
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | One file             | `<!-- korean-writing: ignore -->` at the top. For contracts, or a catalog of bad examples, where flagging every time makes no sense |
 | Some rules in one file | `<!-- korean-writing: disable K1 K9 -->` at the top. For a document that uses em dashes on purpose |
-| The piece you are writing now | Choose 「적용 안 함」 in the pre-write prompt |
 | A repository         | Commit a `.korean-writing.json` so the whole team shares one standard. Example below                                               |
 | Some rules, persistently | The plugin setting `disabled_rules`, or `KOREAN_WRITING_DISABLE_RULES=K1,K9`                                                  |
-| Whole session        | `KOREAN_WRITING_HOOK_DISABLED=1`. Turns off both the check hook and the skill-confirm hook                                         |
+| Whole session        | `KOREAN_WRITING_HOOK_DISABLED=1`. Turns off the check hook                                         |
 | The whole plugin     | `claude plugin disable korean-writing`                                                                                              |
 
 ```json
@@ -327,7 +319,7 @@ There are already several tools that make Korean read naturally. The most widely
 
 | Tool                                                               | When first written                                                       | On save                                                                              | When revised                                                       | Network                                                                   |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| **korean-writing**                                                 | A writing skill follows the rules from the first line                    | A hook checks right after the edit and hands findings back to Claude in the same turn | im-not-ai, vendored                                                | None; CI enforces it                                                      |
+| **korean-writing**                                                 | `/korean-writing` writes under the rules when called                     | A hook checks right after the edit and hands findings back to Claude in the same turn | im-not-ai, vendored                                                | None; CI enforces it                                                      |
 | [im-not-ai](https://github.com/epoko77-ai/im-not-ai)               |                                                                          |                                                                                      | Polishing pipeline (1 to 3 calls)                                  | None                                                                      |
 | [fluent-korean](https://github.com/snflkd/fluent-korean)           | An output style applied to every reply; aims for unambiguous sentences   |                                                                                      |                                                                    | None                                                                      |
 | [patina](https://github.com/devswha/patina)                        |                                                                          | A pre-commit hook scores Markdown at commit time                                     | Polishing (skill, CLI, web) for Korean, English, Chinese, Japanese | The web version runs server-side                                          |
@@ -335,7 +327,7 @@ There are already several tools that make Korean read naturally. The most widely
 
 Checked against each repository on 2026-09-11. A blank cell means no feature for that moment was found. patina also checks on save, but at a different moment: patina runs when a person commits, this plugin runs in the turn where Claude edited the file.
 
-This plugin also ships an output style that covers the same moment. It is off by default and you turn it on under Output style in `/config`. Claude Code keeps only one output style active, so you pick either fluent-korean's or this one. Whichever you pick, the writing skill, the check hook and the polishing keep working.
+This plugin does not ship an output style for ordinary answers. With a style such as fluent-korean's turned on, the check hook and the polishing keep working.
 
 ## FAQ
 
