@@ -35,6 +35,19 @@ KW_OUT_BASE=docs/experiments/output-style \
 
 LLM 을 부르므로 CI 에 넣지 않습니다. 계정 사용량이 떨어지면 답 자리에 안내 문구가 들어오고 채점기가 그 표본을 「답이 아닌 표본」으로 찍습니다.
 
+## 다른 도구와 붙이기
+
+`rival.sh` 는 조건 둘을 받아 블라인드로 붙입니다. 받는 조건은 `none`(아무 지침 없음), `style:<파일>`(그 파일을 output style 로 켬), `rewrite:<지침파일>`(지침 없이 초안을 쓴 뒤 그 지침으로 고쳐 씀) 셋입니다.
+
+```bash
+KW_ARM_A="style:$PWD/plugin/output-styles/korean-writing.md" \
+KW_ARM_B="style:/경로/남의-스타일.md" \
+KW_LABEL_A=korean-writing KW_LABEL_B=상대이름 \
+docs/experiments/output-style/rival.sh
+```
+
+`blind.sh` 와 나눠 둔 이유는 그쪽이 M 절 측정의 재현 장비이기 때문입니다. 갈래를 늘리면 그 기록을 흔듭니다. 결과는 [EVALUATION.md](../../../EVALUATION.md) 의 N 절에 있습니다.
+
 ## 합격선
 
 돌리기 전에 정했습니다. H13 이 쓴 기준과 같습니다.

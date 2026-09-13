@@ -357,6 +357,8 @@ plugin/skills/humanize-korean/references/ 384 KB  윤문 중 필요한 문서만
 
 ## 검증
 
+무엇을 근거로 이렇게 판정하는지는 [docs/foundations.md](./docs/foundations.md)가 한자리에서 가리킵니다. 연구 문헌, 분류 체계, 이 저장소가 만든 규칙, 재현 장비가 어디에 있는지 적은 지도입니다.
+
 합격 기준과 측정 결과는 [`EVALUATION.md`](./EVALUATION.md)에 있습니다. 기준은 훅 정확도, 스킬 트리거, 스킬 내용 유효성, 구조 건전성, 실패 모드, 사용하는 사람의 기준까지 여섯 묶음이고 하나라도 미달이면 고치고 다시 잽니다.
 
 | 측정                      | 결과                                                              |
@@ -518,7 +520,7 @@ korean-writing/
 
 2026-09-11에 각 저장소를 열어 확인한 내용입니다. 빈칸은 그 시점을 맡는 기능을 찾지 못했다는 뜻입니다. 저장할 때의 검사는 patina에도 있지만 시점이 다릅니다. patina는 사람이 커밋할 때 걸리고 이 플러그인은 Claude가 파일을 고친 그 턴에 걸립니다. Claude Code는 PostToolUse 훅이 종료 코드 2로 끝나면 그 stderr를 Claude에게 보여 주고 같은 턴에 반응하게 합니다([hooks 문서](https://code.claude.com/docs/en/hooks)).
 
-fluent-korean과는 맡는 시점이 겹치지 않아 같이 설치해도 됩니다. 맞춤법과 띄어쓰기는 이 플러그인이 보지 않으니 맞춤법 검사기와도 겹치지 않습니다.
+이 플러그인도 같은 시점을 맡는 output style을 함께 싣습니다. 기본은 꺼져 있고 `/config`의 Output style에서 골라 켭니다. Claude Code는 output style을 한 번에 하나만 켜므로 fluent-korean과 이 스타일 가운데 하나를 고르게 됩니다. 스타일을 어느 쪽으로 켜든 작성 스킬과 검사 훅과 윤문은 그대로 돕니다. 이 스타일이 답변의 세부를 떨어뜨리지 않는지는 [EVALUATION.md](EVALUATION.md)의 M절에 있습니다. 맞춤법과 띄어쓰기는 이 플러그인이 보지 않으니 맞춤법 검사기와도 겹치지 않습니다.
 
 ## 자주 묻는 질문
 
