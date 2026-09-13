@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "claude-korean-writing",
+  "name": "korean-writing",
   "version": "2.1.0",
   "description": "Claude Code가 번역투와 AI 티 없는 한국어를 쓰게 하는 플러그인",
   "owner": {
@@ -18,8 +18,8 @@
         "email": "rjsgmldnwn@gmail.com",
         "url": "https://github.com/IsthisLee"
       },
-      "homepage": "https://github.com/IsthisLee/claude-korean-writing#readme",
-      "repository": "https://github.com/IsthisLee/claude-korean-writing",
+      "homepage": "https://github.com/IsthisLee/korean-writing#readme",
+      "repository": "https://github.com/IsthisLee/korean-writing",
       "license": "MIT",
       "category": "productivity",
       "keywords": [

@@ -24,7 +24,7 @@ cd "$(dirname "$0")/.."
 VER="${1:-}"; MODE="${2:-}"
 [[ "$VER" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "사용: tools/release.sh <major.minor.patch> [--push]" >&2; exit 1; }
 TAG="v$VER"; TODAY="$(date +%Y-%m-%d)"
-REPO="https://github.com/IsthisLee/claude-korean-writing"
+REPO="https://github.com/IsthisLee/korean-writing"
 
 fail() { echo "중단: $*" >&2; git checkout -q -- . 2>/dev/null || true; exit 1; }
 

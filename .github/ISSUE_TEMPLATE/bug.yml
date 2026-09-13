@@ -7,9 +7,9 @@ body:
     attributes:
       value: |
         훅이 **멀쩡한 문장을 잡은 경우**(오탐)는 이 양식이 아니라
-        [어색한 문장 제보](https://github.com/IsthisLee/claude-korean-writing/issues/new?template=awkward-sentence.yml) 를 써 주세요. 정답 데이터가 됩니다.
+        [어색한 문장 제보](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml) 를 써 주세요. 정답 데이터가 됩니다.
 
-        보안 문제는 공개 이슈 대신 [SECURITY.md](https://github.com/IsthisLee/claude-korean-writing/blob/main/SECURITY.md) 의 절차를 씁니다.
+        보안 문제는 공개 이슈 대신 [SECURITY.md](https://github.com/IsthisLee/korean-writing/blob/main/SECURITY.md) 의 절차를 씁니다.
   - type: textarea
     id: what
     attributes:
