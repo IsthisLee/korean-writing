@@ -27,9 +27,21 @@ done
 NEUTRAL="$(mktemp -d -t kw-neutral)" || exit 1
 trap 'rm -f "$cfg"; rm -rf "$NEUTRAL"' EXIT
 
-common=(-p "$(cat "$src")" --no-session-persistence --tools "" --strict-mcp-config --setting-sources "" --model "$model" --output-format json)
-if [ "$cond" = "B" ]; then
-  (cd "$NEUTRAL" && claude "${common[@]}" --settings "$cfg" < /dev/null) > "$out.tmp" 2> "$out.err" && mv "$out.tmp" "$out" || echo "FAIL $id $cond $s $model"
-else
-  (cd "$NEUTRAL" && claude "${common[@]}" < /dev/null) > "$out.tmp" 2> "$out.err" && mv "$out.tmp" "$out" || echo "FAIL $id $cond $s $model"
-fi
+# O 와 P 는 output style 측정용 쌍이다. O 는 스타일을 켜고 P 는 같은 플래그로 켜지 않는다.
+# A·B 와 달리 --setting-sources project 를 쓰는 이유는 스타일이 프로젝트의
+# .claude/output-styles/ 에서만 켜졌기 때문이다(2026-09-14 실측). 빈 임시 폴더에서 돌리므로
+# P 가 읽어 들이는 프로젝트 설정은 없다. A 와 플래그가 달라 짝을 P 로 따로 둔다.
+sources=""
+case "$cond" in O|P) sources="project" ;; esac
+
+common=(-p "$(cat "$src")" --no-session-persistence --tools "" --strict-mcp-config --setting-sources "$sources" --model "$model" --output-format json)
+extra=()
+case "$cond" in
+  B) extra=(--settings "$cfg") ;;
+  O) mkdir -p "$NEUTRAL/.claude/output-styles"
+     cp "$REPO/plugin/output-styles/korean-writing.md" "$NEUTRAL/.claude/output-styles/" || exit 1
+     echo '{"outputStyle":"korean-writing"}' > "$NEUTRAL/style.json"
+     extra=(--settings "$NEUTRAL/style.json") ;;
+esac
+
+(cd "$NEUTRAL" && claude "${common[@]}" ${extra[@]+"${extra[@]}"} < /dev/null) > "$out.tmp" 2> "$out.err" && mv "$out.tmp" "$out" || echo "FAIL $id $cond $s $model"

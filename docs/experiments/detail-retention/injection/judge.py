@@ -11,6 +11,7 @@ import concurrent.futures as cf
 import itertools
 import json
 import math
+import os
 import pathlib
 import random
 import re
@@ -19,9 +20,12 @@ import subprocess
 import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
-OUT = HERE / "out"
-JUDGE = HERE / "judge"
-JUDGE.mkdir(exist_ok=True)
+# 같은 채점을 다른 실험 폴더에도 쓴다. KW_OUT_BASE 를 주면 그 폴더의 out/ 과 judge/ 를 본다.
+# 주지 않으면 이 폴더를 그대로 본다(H13 의 기록).
+BASE = pathlib.Path(os.environ.get("KW_OUT_BASE") or HERE)
+OUT = BASE / "out"
+JUDGE = BASE / "judge"
+JUDGE.mkdir(parents=True, exist_ok=True)
 
 ITEMS = {
     "default300": "delay 의 기본값이 300ms 라는 점",

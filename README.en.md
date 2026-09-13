@@ -170,6 +170,7 @@ Here is what loads on its own, when, and what to type to call it by name.
 | A second polishing pass          | Never on its own; it has to be called by name                 | `/korean-writing:humanize-redo [instruction]`                    |
 | The check hook                   | Right after `Edit`, `Write` or `MultiEdit` touches a `.md`    | `/korean-writing:check FILE...`                                   |
 | Character counting               | "500자 이내로", "글자 수 세줘" and similar requests            | `/korean-writing:korean-character-count`                         |
+| The output style                 | Every answer once you turn it on; off by default               | `/config` → Output style → `korean-writing`                      |
 
 The two hooks have no name to call: they run when their condition is met and stay quiet otherwise. Three of the five skills load from the request; the two polishing entry points (`humanize`, `humanize-redo`) carry `disable-model-invocation`, so they only run when typed, and in exchange they cost nothing in always-on context. If you installed the plugin, `/korean-writing:korean-writing` reaches the same skill; the short form is fine. When Claude calls `korean-writing` on its own, it first asks in Korean whether to apply it; why is under "Why it asks before writing" below.
 
