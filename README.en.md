@@ -355,6 +355,8 @@ plugin/skills/humanize-korean/references/ 384 KB   only the documents a polish n
 
 ## Verification
 
+Where these verdicts come from is mapped in [docs/foundations.md](./docs/foundations.md) (Korean): the research literature, the taxonomy, the rules this repository wrote itself, and the harnesses that reproduce the measurements.
+
 The pass criteria and the measurements are in [`EVALUATION.md`](./EVALUATION.md) (Korean). The criteria form six groups, hook accuracy, skill triggering, skill effectiveness, structural soundness, failure modes and the user's own criteria, and any group that falls short gets fixed and measured again.
 
 | Measurement                        | Result                                                                          |
@@ -497,7 +499,7 @@ There are already several tools that make Korean read naturally. The most widely
 
 Checked against each repository on 2026-09-11. A blank cell means no feature for that moment was found. patina also checks on save, but at a different moment: patina runs when a person commits, this plugin runs in the turn where Claude edited the file. When a PostToolUse hook exits with code 2, Claude Code shows its stderr to Claude so it can react in the same turn ([hooks docs](https://code.claude.com/docs/en/hooks)).
 
-fluent-korean covers a different moment, so the two can be installed together. This plugin does not check spelling or spacing, so it does not overlap with spell checkers either.
+This plugin now ships an output style that covers the same moment. It is off by default and you turn it on under Output style in `/config`. Claude Code keeps only one output style active, so you pick either fluent-korean's or this one. Whichever you pick, the writing skill, the check hook and the polishing keep working. Whether this style costs any detail in ordinary answers is measured in section M of [EVALUATION.md](EVALUATION.md). This plugin does not check spelling or spacing, so it does not overlap with spell checkers either.
 
 ## FAQ
 

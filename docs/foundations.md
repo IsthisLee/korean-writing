@@ -15,12 +15,12 @@
 
 | 문서 | 크기 | 무엇이 있나 |
 | --- | --- | --- |
-| [ai-tell-taxonomy.md](../plugin/skills/humanize-korean/references/ai-tell-taxonomy.md) | 124KB | AI 한글 티 분류 체계 v2.0. 10대 카테고리(A 번역투, B 영어 인용 과다, C 구조적 패턴, D 관용구, E 리듬 균일성, F 과도한 수식, G 과도한 완곡 등)를 심각도 S1·S2로 나눕니다 |
+| [ai-tell-taxonomy.md](../plugin/skills/humanize-korean/references/ai-tell-taxonomy.md) | 121KB | AI 한글 티 분류 체계 v2.0. 10대 카테고리(A 번역투, B 영어 인용 과다, C 구조적 패턴, D 관용구, E 리듬 균일성, F 과도한 수식, G 과도한 완곡 등)를 심각도 S1·S2로 나눕니다 |
 | [quick-rules.md](../plugin/skills/humanize-korean/references/quick-rules.md) | 17KB | 한 콜짜리 빠른 경로가 쓰는 요약 룰북 |
 | [diagnosis-rules.md](../plugin/skills/humanize-korean/references/diagnosis-rules.md) | 16KB | 진단 전용 슬림 색인. 무엇을 찾을지만 담고 처방은 빼 둔 판 |
 | [rewriting-playbook.md](../plugin/skills/humanize-korean/references/rewriting-playbook.md) | 16KB | 카테고리별 치환 레시피, 변경률 감시, 바꾸면 안 되는 어휘 목록, 장르별 조정 |
 | [metrics.py](../plugin/skills/humanize-korean/references/metrics.py) · [metrics_v2.py](../plugin/skills/humanize-korean/references/metrics_v2.py) | 15KB · 31KB | 윤문 전에 돌리는 수치 계산기. v2는 post-editese 3축(단순화·정규화·간섭)과 번역 유형 신호 여덟을 더합니다. 표준 라이브러리만 씁니다 |
-| [baseline.json](../plugin/skills/humanize-korean/references/baseline.json) | 8.7KB | 장르별 기준값과 z 점수 임계, 어휘 사전 |
+| [baseline.json](../plugin/skills/humanize-korean/references/baseline.json) | 8.4KB | 장르별 기준값과 z 점수 임계, 어휘 사전 |
 
 **이 여섯은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)에서 커밋째 고정해 가져온 파일입니다.** 고치지 않습니다. 무엇을 어디까지 가져왔는지는 [plugin/NOTICE.md](../plugin/NOTICE.md)에 적혀 있습니다.
 
