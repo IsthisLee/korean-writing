@@ -170,6 +170,7 @@ npx skills add IsthisLee/korean-writing -s korean-writing -s korean-character-co
 | 2차 윤문                     | 뜨지 않습니다. 이름을 쳐야 돕니다                         | `/korean-writing:humanize-redo [지시]`                         |
 | 검사 훅                      | `.md` 를 `Edit`·`Write`·`MultiEdit` 로 고친 직후          | `/korean-writing:check 파일...`                                |
 | 글자 수                      | "500자 이내로", "글자 수 세줘" 같은 요청                  | `/korean-writing:korean-character-count`                       |
+| output style                 | 켠 세션의 모든 답변. 기본은 꺼져 있습니다                 | `/config` 의 Output style 에서 `korean-writing` 선택           |
 
 훅 둘은 부를 이름이 없습니다. 조건이 맞으면 저절로 돌고 아니면 돌지 않습니다. 스킬 다섯 가운데 셋은 요청을 보고 스스로 뜨고, 윤문 진입 둘(`humanize`, `humanize-redo`)은 `disable-model-invocation` 이 걸려 있어 이름을 쳐야만 돕니다. 그 대신 이 둘은 상시 컨텍스트를 한 토큰도 쓰지 않습니다. 플러그인으로 설치했으면 `/korean-writing:korean-writing` 도 같은 스킬을 부릅니다. 짧은 쪽으로 써도 됩니다. 모델이 `korean-writing` 을 스스로 부르면 쓰기 전에 적용할지 한국어로 묻습니다. 왜 묻는지는 아래 「쓰기 전에 묻는 이유」에 있습니다.
 

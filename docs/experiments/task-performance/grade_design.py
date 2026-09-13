@@ -159,18 +159,32 @@ def diff_ci(k1, n1, k2, n2):
 LENGTH_FLOOR = 0.85   # B 의 길이 중앙값이 A 의 이 비율 아래로 내려가면 경고한다
 
 
+# 조건 이름은 인자로 바꾼다. 기본은 지금까지의 A(주입 없음) 대 B(주입 있음)다.
+# output style 측정은 grade_design.py <모델> P O 로 P(스타일 없음) 대 O(스타일 켬)을 본다.
+BASE_C = sys.argv[2] if len(sys.argv) > 2 else "A"
+TEST_C = sys.argv[3] if len(sys.argv) > 3 else "B"
+LABEL = {"A": "A 주입없음", "B": "B 주입있음", "P": "P 스타일없음", "O": "O 스타일켬"}
+
+
 def run_group(label, table):
-    if not any(OUT.glob(f"{pid}_A_*.json") for pid in table):
-        return None
-    tot = {"A": [0, 0], "B": [0, 0]}
-    lens = {"A": [], "B": []}
-    missed = {"A": {}, "B": {}}
+    # 두 조건 모두 표본이 있어야 센다. 한쪽이 비면 아래 diff_ci 가 0 으로 나눈다.
+    # 생성이 도는 중이거나 한 조건이 통째로 실패했을 때 실제로 그렇게 죽었다.
+    #
+    # list() 로 감싸는 것이 핵심이다. glob() 은 제너레이터를 돌려주고 제너레이터는 비어 있어도
+    # 참이라, any(OUT.glob(...) for pid in table) 은 표본이 0개여도 늘 참이었다.
+    # 옛 줄이 그 모양이었고 A·B 는 양쪽에 늘 표본이 있어 드러나지 않았다(2026-09-14).
+    for c in (BASE_C, TEST_C):
+        if not any(list(OUT.glob(f"{pid}_{c}_*.json")) for pid in table):
+            return None
+    tot = {BASE_C: [0, 0], TEST_C: [0, 0]}
+    lens = {BASE_C: [], TEST_C: []}
+    missed = {BASE_C: {}, TEST_C: {}}
     print(f"\n■ {label}")
-    print(f"\n  {'과제':<8} {'A 주입없음':<24} {'B 주입있음':<24}")
+    print(f"\n  {'과제':<8} {LABEL.get(BASE_C, BASE_C):<24} {LABEL.get(TEST_C, TEST_C):<24}")
     print("  " + "-" * 62)
     for pid in sorted(table):
         cells = []
-        for c in "AB":
+        for c in (BASE_C, TEST_C):
             per = []
             for f in sorted(OUT.glob(f"{pid}_{c}_*.json")):
                 text = json.loads(f.read_text(encoding="utf-8")).get("result") or ""
@@ -188,21 +202,22 @@ def run_group(label, table):
             cells.append(f"{sum(h for h,_ in per)}/{sum(t for _,t in per)} n={len(per)}")
         print(f"  {pid:<8} {cells[0]:<24} {cells[1]:<24}")
     print("  " + "-" * 62)
-    a, b = tot["A"], tot["B"]
+    bl, tl = LABEL.get(BASE_C, BASE_C), LABEL.get(TEST_C, TEST_C)
+    a, b = tot[BASE_C], tot[TEST_C]
     lo, hi = diff_ci(a[0], a[1], b[0], b[1])
     verdict = "차이 없음" if lo <= 0 <= hi else ("저하" if hi < 0 else "개선")
-    print(f"  개념 적중  A {a[0]}/{a[1]} ({a[0]/a[1]*100:.0f}%)   B {b[0]}/{b[1]} ({b[0]/b[1]*100:.0f}%)"
+    print(f"  개념 적중  {bl} {a[0]}/{a[1]} ({a[0]/a[1]*100:.0f}%)   {tl} {b[0]}/{b[1]} ({b[0]/b[1]*100:.0f}%)"
           f"   차이 95% CI [{lo*100:+.1f}, {hi*100:+.1f}]%p → {verdict}")
-    ma, mb = statistics.median(lens["A"]), statistics.median(lens["B"])
+    ma, mb = statistics.median(lens[BASE_C]), statistics.median(lens[TEST_C])
     ratio = mb / ma if ma else 1.0
     mark = "OK" if ratio >= LENGTH_FLOOR else f"경고 (하한 {LENGTH_FLOOR:.0%})"
-    print(f"  길이 중앙값  A {ma:.0f}자   B {mb:.0f}자   비율 {ratio*100:.0f}%  → {mark}")
-    gaps = [k for k in set(missed["A"]) | set(missed["B"])
-            if missed["B"].get(k, 0) - missed["A"].get(k, 0) >= 2]
+    print(f"  길이 중앙값  {bl} {ma:.0f}자   {tl} {mb:.0f}자   비율 {ratio*100:.0f}%  → {mark}")
+    gaps = [k for k in set(missed[BASE_C]) | set(missed[TEST_C])
+            if missed[TEST_C].get(k, 0) - missed[BASE_C].get(k, 0) >= 2]
     if gaps:
-        print("  B 가 더 많이 놓친 개념")
-        for k in sorted(gaps, key=lambda k: missed["A"].get(k, 0) - missed["B"].get(k, 0)):
-            print(f"    {k:<28} A {missed['A'].get(k,0)}  B {missed['B'].get(k,0)}")
+        print(f"  {tl} 가 더 많이 놓친 개념")
+        for k in sorted(gaps, key=lambda k: missed[BASE_C].get(k, 0) - missed[TEST_C].get(k, 0)):
+            print(f"    {k:<28} {bl} {missed[BASE_C].get(k,0)}  {tl} {missed[TEST_C].get(k,0)}")
     return ratio, (lo, hi)
 
 
