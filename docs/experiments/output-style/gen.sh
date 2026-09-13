@@ -21,7 +21,7 @@ set -u
 BASE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$BASE/../../.." && pwd)"
 RULES="$REPO/docs/experiments/detail-retention/injection/rules"
-STYLE="$REPO/plugin/output-styles/korean-writing.md"
+STYLE="$REPO/docs/experiments/output-style/korean-writing.md"
 
 [ $# -eq 2 ] || { echo "사용: gen.sh <A|O|B|N> <표본번호>" >&2; exit 2; }
 cond=$1; s=$2; model=${KW_MODEL:-claude-sonnet-5}

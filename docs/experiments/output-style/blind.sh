@@ -18,7 +18,7 @@ set -uo pipefail
 BASE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$BASE/../../.." && pwd)"
 PROMPTS="$REPO/docs/experiments/always-on/prompts"
-STYLE="$REPO/plugin/output-styles/korean-writing.md"
+STYLE="$REPO/docs/experiments/output-style/korean-writing.md"
 
 IDS=("$@"); [ ${#IDS[@]} -gt 0 ] || IDS=(01 05 09 11)
 MODEL="${KW_MODEL:-claude-sonnet-5}"

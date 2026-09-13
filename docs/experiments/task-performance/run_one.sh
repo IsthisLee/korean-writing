@@ -39,7 +39,7 @@ extra=()
 case "$cond" in
   B) extra=(--settings "$cfg") ;;
   O) mkdir -p "$NEUTRAL/.claude/output-styles"
-     cp "$REPO/plugin/output-styles/korean-writing.md" "$NEUTRAL/.claude/output-styles/" || exit 1
+     cp "$REPO/docs/experiments/output-style/korean-writing.md" "$NEUTRAL/.claude/output-styles/" || exit 1
      echo '{"outputStyle":"korean-writing"}' > "$NEUTRAL/style.json"
      extra=(--settings "$NEUTRAL/style.json") ;;
 esac

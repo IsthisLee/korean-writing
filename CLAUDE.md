@@ -4,7 +4,7 @@
 
 ## 이 저장소가 무엇인가
 
-Claude Code 가 쓰는 한국어 글의 품질과 자연스러움을 맡는 플러그인입니다. 이 저장소가 쓴 스킬 둘, im-not-ai 에서 내장한 윤문 스킬 셋과 에이전트 셋, 훅 둘(모델이 korean-writing 스킬을 부르기 전 확인, 편집 뒤 검사), 슬래시 명령 하나, 검사·릴리스 스크립트로 이루어집니다. 구조와 사용법은 [README.md](README.md), 판정 기준은 [EVALUATION.md](EVALUATION.md) 에 있습니다.
+Claude Code 가 쓰는 한국어 글의 품질과 자연스러움을 맡는 플러그인입니다. 이 저장소가 쓴 스킬 둘, im-not-ai 에서 내장한 윤문 스킬 셋과 에이전트 셋, 편집 뒤 검사 훅 하나, 슬래시 명령 하나, 검사·릴리스 스크립트로 이루어집니다. 구조와 사용법은 [README.md](README.md), 판정 기준은 [EVALUATION.md](EVALUATION.md) 에 있습니다.
 
 ## 저장소는 두 층이다
 
@@ -49,7 +49,6 @@ find /tmp/kw-home/.claude/plugins/cache -type f | wc -l    # 설치본 파일 �
 
 ```bash
 python3 tests/test_posttooluse.py     # 검사 훅 회귀 테스트
-python3 tests/test_pretooluse.py      # 스킬 확인 훅 회귀 테스트
 plugin/scripts/check.sh --all         # 저장소가 쓴 .md 가 자기 훅을 통과하는가
 ```
 
@@ -65,9 +64,7 @@ plugin/scripts/check.sh --all         # 저장소가 쓴 .md 가 자기 훅을 �
 
 **평소 답변과 서브에이전트에는 규칙을 주입하지 않습니다.** 2026-09-11 에 두 주입을 뺐습니다. 문체 규칙을 주입하면 답변에서 기본값 같은 세부가 빠졌습니다. 규칙을 어휘 수준으로 줄이고 세부를 빼지 말라고 적어도 막지 못했고, 같은 길이의 중립 문장을 넣었을 때는 빠지지 않았습니다(EVALUATION.md H13). 주입을 되살리려면 그 측정을 다시 통과해야 합니다.
 
-**모델이 korean-writing 스킬을 스스로 부르면 쓰기 전에 한국어로 묻습니다.** `plugin/hooks-handlers/pretooluse-skill.sh` 가 이 스킬의 Skill 호출을 막고(`deny`) 그 사유로 Claude 에게 AskUserQuestion 을 띄우게 합니다. 사용자가 「적용」 을 고르면 세션 기록에서 그 답을 찾아 다음 호출을 통과시키고 다른 답이면 스킬 없이 이어 가게 합니다. 기록을 읽지 못하면 권한 창(`ask`)으로 돌아갑니다. 권한 창은 선택지가 영어이고 거절하면 작업이 멈춰서 이렇게 바꿨습니다(EVALUATION.md J4). 묻는 까닭은 스킬로 쓴 설명 문서에서 곁가지 설명이 빠졌기 때문입니다(J3). 확인을 없애거나 확인 문구를 바꾸려면 `docs/experiments/detail-retention/skill/` 측정을 다시 돌리고 그 결과만큼만 적습니다. 이 훅은 입력을 못 읽으면 아무것도 내지 않고 exit 0 으로 지나갑니다.
-
-**이 답은 검사 훅도 따릅니다.** 「적용 안 함」 뒤에 손댄 `.md` 에는 `plugin/hooks-handlers/posttooluse.sh` 도 알리지 않습니다. 같은 플러그인이 방금 거절한 규칙을 저장할 때마다 다시 들이미는 일을 막으려는 것입니다(2026-09-13 사용자 보고). 범위는 그 파일 하나이고 가장 최근 답이 「적용」 이면 평소대로 검사합니다. 걸린 항목이 있을 때만 기록을 읽으므로 평소 경로의 비용은 그대로입니다. 두 훅이 같은 표지 문구로 답을 찾으므로 확인 창 질문의 「korean-writing 문체 규칙을 적용할까요」 를 바꾸면 두 파일을 함께 고칩니다.
+**korean-writing 작성 스킬은 스스로 뜨지 않습니다.** `plugin/SKILL.md` 에 `disable-model-invocation: true` 가 걸려 있어 `/korean-writing` 을 직접 쳐야 돕니다. 평소 답변의 문체는 사용자가 고른 output style 이 맡습니다. 2026-09-14 에 쓰기 전 확인 훅(`pretooluse-skill.sh`)과 이 저장소의 output style 을 함께 뺐고, output style 파일은 측정을 재현할 수 있도록 `docs/experiments/output-style/` 로 옮겼습니다. 확인 훅이 없으므로 검사 훅도 「적용 안 함」 답을 읽지 않습니다. 자동 호출을 되살리려면 EVALUATION.md J3 의 세부 손실 측정을 다시 통과해야 합니다.
 
 **한국어 문서를 고쳤으면 `plugin/scripts/check.sh` 를 통과시킵니다.** CI 가 같은 검사를 돌리므로 여기서 걸리면 거기서도 걸립니다. 나쁜 예를 일부러 싣는 문서라면 파일 머리에 `<!-- korean-writing: ignore -->` 를 넣습니다.
 
