@@ -60,7 +60,9 @@ FEATURES = [
 # 38(감정 표현)은 한국어 감성 측정 수단을 정하지 않아 파일럿에서 재지 않는다.
 NOT_MEASURED = {38: "한국어 감성 측정 수단을 아직 정하지 않음"}
 
-PUNCT = {"SF", "SP", "SS", "SE", "SO"}
+# Kiwi 는 괄호·따옴표를 SSO(여는)·SSC(닫는)로, 「1.」 같은 글머리 번호를 SB 로 태그한다.
+PUNCT = {"SF", "SP", "SS", "SSO", "SSC", "SE", "SO"}
+NON_MORPH = {"SW", "SB"}
 CONTENT = {"NNG", "NNP", "VV", "VA", "MAG", "XR"}
 DISCOURSE = {"그런데", "근데", "사실", "아무튼", "어쨌든", "그러니까", "말하자면", "솔직히", "글쎄", "뭐", "참"}
 DOWNTONERS = {"거의", "약간", "조금", "다소", "좀", "살짝", "그다지", "별로", "비교적"}
@@ -88,7 +90,7 @@ def base(tag):
 
 
 def is_morph(tag):
-    return tag not in PUNCT and tag != "SW" and not tag.startswith("W_")
+    return tag not in PUNCT and tag not in NON_MORPH and not tag.startswith("W_")
 
 
 def ratio(a, b):

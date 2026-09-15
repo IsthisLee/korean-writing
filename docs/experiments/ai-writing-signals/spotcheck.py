@@ -20,7 +20,7 @@ def main():
     lines = ["# 형태소·띄어쓰기 대조표", "", "각 문장의 분석이 원문과 맞는지 사람이 표시합니다. 틀린 곳은 오른쪽 칸에 적습니다.", ""]
     for group in ("human", "ai"):
         pool = []
-        for p in sorted((out / group).glob("*.txt")):
+        for p in sorted((out / "clean" / group).glob("*.txt")):
             for s in split(p.read_text(encoding="utf-8")):
                 if sum(1 for t in s["toks"] if is_morph(t[1])) >= 5:
                     pool.append((p.stem, s))

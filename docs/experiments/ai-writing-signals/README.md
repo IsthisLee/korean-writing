@@ -33,11 +33,22 @@ $PY collect_cc.py tech --frame $OUT/frames/tech.tsv --companies 5 --per-company 
 # 2. AI 글: 사람 글 한 편마다 한 편, 장르마다 opus-5 와 sonnet-5 를 번갈아
 $PY generate.py --out $OUT
 
-# 3. 지표와 비교
-$PY signals.py $OUT/human/*.txt $OUT/ai/*.txt --out $OUT/features
+# 3. 정리, 지표, 비교
+# 글 대신 자료를 요청한 응답은 $OUT/excluded.tsv(id, reason)에,
+# 본문 앞뒤에 붙은 사용자에게 하는 말은 $OUT/meta_paragraphs.tsv(id, prefix, reason)에 적는다
+$PY clean.py --out $OUT
+$PY signals.py $OUT/clean/human/*.txt $OUT/clean/ai/*.txt --out $OUT/features
 $PY analyze.py --out $OUT
 $PY spotcheck.py --out $OUT
+
+# 4. 사후 진단(사전 등록 판정이 아님)
+$PY null_check.py --out $OUT --n 1000
+$PY lenmatch.py --src $OUT --dst $OUT-lenmatch
+$PY signals.py $OUT-lenmatch/clean/human/*.txt --out $OUT-lenmatch/features
+$PY analyze.py --out $OUT-lenmatch
 ```
+
+파일럿의 표본 목록, 제외 목록, 수치 원본은 `results/pilot/` 에 둡니다. 사람 글 문장이 그대로 든 `spotcheck.md` 와 보고서 사본은 `out/` 에만 둡니다.
 
 수집 스크립트는 이미 저장한 글을 세어 이어서 받습니다. 도중에 멈추면 같은 명령을 다시 돌립니다.
 
@@ -51,6 +62,9 @@ $PY spotcheck.py --out $OUT
 | `collect_cc.py` | Common Crawl 이 2022-11-30 전에 수집한 블로그 글을 수집본에서 뽑음 |
 | `prompts/` | 장르별 AI 글 프롬프트 |
 | `generate.py` | `claude -p` 로 AI 글을 씀 |
+| `clean.py` | 사람 글과 AI 글에서 제목 줄, 위키 AI 글의 미디어위키 제목 줄, 기록한 메타 문단을 같은 규칙으로 빼고 제외 문서를 거름 |
 | `signals.py` | 문서마다 후보 지표를 계산함 |
 | `analyze.py` | 사람 글과 AI 글을 비교하고 `report.md`, `results.json` 을 씀 |
 | `spotcheck.py` | 형태소 분석과 띄어쓰기 판정을 사람이 대조할 표를 만듦 |
+| `null_check.py` | 사후 진단: 사람/AI 표시를 무작위로 섞었을 때의 적중 수와 비교함 |
+| `lenmatch.py` | 사후 진단: 사람 글을 짝이 되는 AI 글 길이로 잘라 다시 비교할 사본을 만듦 |

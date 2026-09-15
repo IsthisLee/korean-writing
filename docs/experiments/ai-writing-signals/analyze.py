@@ -30,10 +30,13 @@ LISTS = {"lemmas": 10, "pos_bigrams": 12, "function_words": 13, "josa_bigrams": 
 
 
 def load(out):
+    """excluded.tsv(id, reason)에 적힌 문서는 뺀다. 예: 글 대신 자료를 요청한 AI 응답."""
+    excluded = {row["id"] for row in read_manifest(out / "excluded.tsv")}
     feats = {}
     for p in sorted((out / "features").glob("*.json")):
         d = json.loads(p.read_text(encoding="utf-8"))
-        feats[d["id"]] = d
+        if d["id"] not in excluded:
+            feats[d["id"]] = d
     docs = []
     for h in read_manifest(out / "human.tsv"):
         if h["id"] in feats:

@@ -12,6 +12,7 @@ import argparse
 import csv
 import datetime
 import gzip
+import html
 import json
 import pathlib
 import random
@@ -104,31 +105,48 @@ def fetch_html(r):
     return body.decode(enc, errors="replace")
 
 
-def clean_title(title):
-    title = (title or "").strip()
-    parts = re.split(r"\s+(?:\||::|-|–|—)\s+", title)
-    return parts[0].strip() if len(parts) > 1 and len(parts[0]) >= 4 else title
+def meta_content(page, prop):
+    for pat in (rf'<meta[^>]+(?:property|name)=["\']{prop}["\'][^>]*content=["\']([^"\']*)["\']',
+                rf'<meta[^>]+content=["\']([^"\']*)["\'][^>]*(?:property|name)=["\']{prop}["\']'):
+        m = re.search(pat, page, re.I)
+        if m:
+            return html.unescape(m.group(1)).strip()
+    return ""
+
+
+def page_title(page, fallback):
+    """og:title 을 먼저 쓰고, 끝이 「구분자 + og:site_name」일 때만 그 부분을 뗀다.
+
+    구분자로 무조건 자르면 「모바일 UI 디자인 기본용어 - 컨트롤」 같은 제목이 잘린다.
+    """
+    title = meta_content(page, "og:title") or (fallback or "").strip()
+    site = meta_content(page, "og:site_name")
+    if site:
+        cut = re.match(rf"^(.*\S)\s+(?:\||::|-|–|—)\s+{re.escape(site)}$", title)
+        if cut:
+            return cut.group(1)
+    return title
 
 
 def take(r, genre, author, doc_id, out):
-    html = fetch_html(r)
-    text = trafilatura.extract(html, url=r["url"], output_format="markdown", include_comments=False,
+    page = fetch_html(r)
+    text = trafilatura.extract(page, url=r["url"], output_format="markdown", include_comments=False,
                                include_tables=False, include_images=False, favor_precision=True) or ""
     text = normalize(text)
     n = hangul_count(text)
     if n < MIN_HANGUL:
         return None, n
-    if genre == "tech" and not re.search(r'og:type["\']?\s+content=["\']article|"@type"\s*:\s*"(?:Blog)?Posting|"@type"\s*:\s*"(?:Tech)?Article', html):
+    if genre == "tech" and not re.search(r'og:type["\']?\s+content=["\']article|"@type"\s*:\s*"(?:Blog)?Posting|"@type"\s*:\s*"(?:Tech)?Article', page):
         return None, -1  # 글 목록이나 소개 쪽을 거르려고 글 쪽 표시(og:type article, JSON-LD)를 요구한다
-    meta = trafilatura.extract_metadata(html, default_url=r["url"])
+    meta = trafilatura.extract_metadata(page, default_url=r["url"])
     raw_title = (meta.title if meta else "") or ""
     page_date = (meta.date if meta else "") or ""
     ts = r["timestamp"]
     (out / "human" / f"{doc_id}.txt").write_text(text + "\n", encoding="utf-8")
     (out / "human-html").mkdir(exist_ok=True)
-    (out / "human-html" / f"{doc_id}.html").write_text(html, encoding="utf-8")
+    (out / "human-html" / f"{doc_id}.html").write_text(page, encoding="utf-8")
     row = {
-        "id": doc_id, "genre": genre, "author": author, "title": clean_title(raw_title), "raw_title": raw_title,
+        "id": doc_id, "genre": genre, "author": author, "title": page_title(page, raw_title), "raw_title": raw_title,
         "url": r["url"], "date": f"{ts[:4]}-{ts[4:6]}-{ts[6:8]}T{ts[8:10]}:{ts[10:12]}:{ts[12:14]}Z",
         "date_evidence": f"Common Crawl {r['filename'].split('/')[1]} 수집 시각" + (f"; 페이지 추출 날짜 {page_date}" if page_date else ""),
         "hangul": n, "fetched_at": now(),
