@@ -12,7 +12,6 @@
 # 판정 규칙과 주입문. 실측 없이 바뀌면 안 되는 곳이다.
 /plugin/hooks-handlers/                        @IsthisLee
 /plugin/hooks/                                 @IsthisLee
-/plugin/SKILL.md                               @IsthisLee
 /tests/                                        @IsthisLee
 /EVALUATION.md                                 @IsthisLee
 

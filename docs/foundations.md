@@ -29,7 +29,7 @@
 
 | 무엇           | 어디                                                                                  | 무엇이 있나                                                                                                     |
 | ------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| 작성 규칙        | [plugin/SKILL.md](../plugin/SKILL.md)                                               | 글을 처음 쓸 때 따르는 규칙. 핵심, 문장 만드는 법, 리듬, 서식, 품질 바, 자주 하는 실수                                                     |
+| 측정에 쓴 작성 규칙 | [experiments/writing-skill.md](experiments/writing-skill.md)                     | C·J·L절 측정에 쓴 작성 스킬 본문. 2026-09-15에 플러그인에서 뺐고 재현용으로만 둡니다                                                   |
 | 검사 규칙(K 코드) | [posttooluse.sh](../plugin/hooks-handlers/posttooluse.sh) 208~284행                  | 코드마다 정규식과 임계와 처방이 한 줄씩 붙어 있습니다                                                                             |
 | 사람이 읽는 판정 정본 | [README.md](../README.md) 「판정 규칙」                                                   | 판정 순서 여덟 단계와 코드별 표                                                                                         |
 | 측정에 쓴 문체 지침 | [experiments/output-style/korean-writing.md](experiments/output-style/korean-writing.md) | M·N 절 측정에 쓴 output style. 2026-09-14 에 플러그인에서 뺐고 재현용으로만 둡니다 |
@@ -50,5 +50,4 @@
 
 - 가져온 파일(2절)을 손대야 하면 `plugin/NOTICE.md`의 해당 줄도 함께 고칩니다.
 - 판정 규칙을 바꾸면 `tools/measure.sh`로 실제 문서 뭉치의 오탐을 재고 결과를 `EVALUATION.md`에 남깁니다.
-- `plugin/SKILL.md`를 고쳤으면 릴리스 전에 `docs/experiments/skill-vs-imnotai/run.sh`로 블라인드 판정을 돌립니다.
 

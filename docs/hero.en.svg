@@ -32,15 +32,12 @@
 <text x="272" y="486" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="21" font-weight="400" fill="#ff8fa3" text-anchor="start">로그를 가지고 있지 않아</text>
 <text x="762" y="486" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="21" font-weight="700" fill="#9aa4b2" text-anchor="start">→</text>
 <text x="796" y="486" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="21" font-weight="700" fill="#7ee0a3" text-anchor="start">로그가 없어</text>
-<rect x="64" y="556" width="373" height="64" rx="12" fill="#262b33"/>
-<text x="84.0" y="583" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#ffd166" text-anchor="start">When first written</text>
-<text x="84.0" y="607" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="400" fill="#e6eaf0" text-anchor="start">the skill writes to the rules</text>
-<rect x="453" y="556" width="373" height="64" rx="12" fill="#262b33"/>
-<text x="473.3333333333333" y="583" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#ffd166" text-anchor="start">On save</text>
-<text x="473.3333333333333" y="607" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="400" fill="#e6eaf0" text-anchor="start">the hook points at flagged lines</text>
-<rect x="843" y="556" width="373" height="64" rx="12" fill="#262b33"/>
-<text x="862.6666666666666" y="583" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#ffd166" text-anchor="start">When revised</text>
-<text x="862.6666666666666" y="607" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="400" fill="#e6eaf0" text-anchor="start">im-not-ai polishing</text>
+<rect x="64" y="556" width="568" height="64" rx="12" fill="#262b33"/>
+<text x="84.0" y="583" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#ffd166" text-anchor="start">On save</text>
+<text x="84.0" y="607" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="400" fill="#e6eaf0" text-anchor="start">the hook points at flagged lines</text>
+<rect x="648" y="556" width="568" height="64" rx="12" fill="#262b33"/>
+<text x="668.0" y="583" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#ffd166" text-anchor="start">When revised</text>
+<text x="668.0" y="607" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="400" fill="#e6eaf0" text-anchor="start">im-not-ai polishing</text>
 <text x="64" y="684" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" font-weight="400" fill="#9aa4b2" text-anchor="start">claude plugin install korean-writing</text>
 <text x="1216" y="684" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" font-weight="400" fill="#9aa4b2" text-anchor="end">No network · MIT</text>
 </svg>

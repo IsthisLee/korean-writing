@@ -28,12 +28,12 @@ TEXT = {
     "ko": {"tag1": "Claude Code 플러그인", "tag2": "번역투와 AI 티 없는 한국어로 쓰게 합니다",
            "left": "Claude Code가 실제로 쓴 문장", "right": "규칙대로 고친 문장",
            "kcap": "K = 저장할 때 검사",
-           "stages": [("처음 작성할 때", "작성 스킬이 처음부터 규칙대로"), ("저장할 때", "검사 훅이 걸린 줄을 짚어 줌"), ("수정할 때", "im-not-ai로 윤문")],
+           "stages": [("저장할 때", "검사 훅이 걸린 줄을 짚어 줌"), ("수정할 때", "im-not-ai로 윤문")],
            "foot": "네트워크를 쓰지 않습니다 · MIT"},
     "en": {"tag1": "A Claude Code plugin", "tag2": "Korean without translationese or AI tells",
            "left": "Written by Claude Code", "right": "Fixed by the rules",
            "kcap": "K = on-save check",
-           "stages": [("When first written", "the skill writes to the rules"), ("On save", "the hook points at flagged lines"), ("When revised", "im-not-ai polishing")],
+           "stages": [("On save", "the hook points at flagged lines"), ("When revised", "im-not-ai polishing")],
            "foot": "No network · MIT"},
 }
 THEME = {
@@ -87,7 +87,8 @@ def render(lang, theme):
         o.append(t(X_AFTER, y, after, 21, c["after"], 700))
         y += 62
     y += 8
-    sw = (W - 2 * M - 2 * 16) / 3
+    n = len(tx["stages"])
+    sw = (W - 2 * M - (n - 1) * 16) / n
     for i, (head, body) in enumerate(tx["stages"]):
         x = M + i * (sw + 16)
         o.append(f'<rect x="{x:.0f}" y="{y}" width="{sw:.0f}" height="64" rx="12" fill="{c["stage"]}"/>')

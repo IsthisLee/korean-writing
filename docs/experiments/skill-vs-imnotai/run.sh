@@ -34,11 +34,14 @@ export KW_REPO="$REPO"
 OUT=${1:-"$BASE/out/run-$(date +%Y%m%d-%H%M%S)"}; shift 2>/dev/null || true
 IDS=("$@"); [ ${#IDS[@]} -gt 0 ] || IDS=(01 05 L1 L4)
 command -v claude >/dev/null 2>&1 || { echo "claude 가 없다" >&2; exit 2; }
-for f in SKILL.md agents/humanize-monolith.md agents/humanize-diagnostician.md agents/humanize-finalizer.md \
+for f in agents/humanize-monolith.md agents/humanize-diagnostician.md agents/humanize-finalizer.md \
          skills/humanize-korean/references/quick-rules.md skills/humanize-korean/references/ai-tell-taxonomy.md \
          scripts/prepare_monolith_input.py; do
   [ -r "$PLUGIN/$f" ] || { echo "필요한 파일이 없다: plugin/$f. 경로가 바뀌었으면 이 스크립트를 고친다" >&2; exit 2; }
 done
+# 작성 스킬은 2026-09-15 에 플러그인에서 뺐다. 이 실험은 재현용으로 옮겨 둔 본문을 붙인다.
+SKILL="$REPO/docs/experiments/writing-skill.md"
+[ -r "$SKILL" ] || { echo "필요한 파일이 없다: docs/experiments/writing-skill.md" >&2; exit 2; }
 mkdir -p "$OUT/gen" "$OUT/work"
 echo "출력: $OUT"
 
@@ -105,7 +108,7 @@ for id in "${IDS[@]}"; do
   # 실측 2026-09-13: 이 안내 없이 부른 L1 과 L3 이 `Error: Reached max turns (1)` 로 죽었고,
   # 같은 프롬프트와 같은 턴 한도에 이 안내만 붙여 따로 다섯 번 부르니 모두 본문이 나왔다.
   # 두 쪽에 똑같은 문구를 붙여 쌍 안의 조건을 맞춘다.
-  gen_to "$OUT/gen/skill_$id.md" "$q" --append-system-prompt "$(cat "$PLUGIN/SKILL.md")$NOTOOL" || exit 1
+  gen_to "$OUT/gen/skill_$id.md" "$q" --append-system-prompt "$(cat "$SKILL")$NOTOOL" || exit 1
   gen_to "$OUT/gen/plain_$id.md" "$q" --append-system-prompt "$NOTOOL" || exit 1
 
   echo "  윤문 $id"
