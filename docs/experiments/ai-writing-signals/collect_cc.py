@@ -106,11 +106,12 @@ def fetch_html(r):
 
 
 def meta_content(page, prop):
-    for pat in (rf'<meta[^>]+(?:property|name)=["\']{prop}["\'][^>]*content=["\']([^"\']*)["\']',
-                rf'<meta[^>]+content=["\']([^"\']*)["\'][^>]*(?:property|name)=["\']{prop}["\']'):
-        m = re.search(pat, page, re.I)
+    # 값을 감싼 따옴표와 같은 종류가 나올 때까지 읽는다. 「'언택트'가 대세다」처럼 값 안에 다른 따옴표가 있을 수 있다.
+    for pat in (rf'<meta[^>]+(?:property|name)=["\']{prop}["\'][^>]*content=(["\'])(.*?)\1',
+                rf'<meta[^>]+content=(["\'])(.*?)\1[^>]*(?:property|name)=["\']{prop}["\']'):
+        m = re.search(pat, page, re.I | re.S)
         if m:
-            return html.unescape(m.group(1)).strip()
+            return html.unescape(m.group(2)).strip()
     return ""
 
 
