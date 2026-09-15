@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "korean-writing",
   "version": "2.1.0",
-  "description": "Claude Code가 번역투와 AI 티 없는 한국어를 쓰게 하는 플러그인",
+  "description": "내가 쓰려고 분석한 한국어 도구들. 원하는 것만 묶고 맘대로 커스텀한 Claude Code 플러그인",
   "owner": {
     "name": "Isthis",
     "email": "rjsgmldnwn@gmail.com",
@@ -12,7 +12,7 @@
     {
       "name": "korean-writing",
       "version": "2.1.0",
-      "description": "Claude Code가 번역투와 AI 티 없는 한국어를 쓰게 하는 플러그인. .md 를 저장하면 검사 훅이 AI 티를 짚어 같은 턴에 Claude 에게 돌려줍니다. 이미 쓴 글은 내장한 im-not-ai 로 다듬습니다. 네트워크를 쓰지 않습니다.",
+      "description": "내가 쓰려고 분석한 한국어 도구들. 원하는 것만 묶고 맘대로 커스텀한 Claude Code 플러그인. .md 를 저장하면 검사 훅이 AI 티를 짚어 같은 턴에 Claude 에게 돌려주고, 이미 쓴 글은 내장한 im-not-ai 로 다듬고, 한국어 글자 수는 스크립트로 셉니다. 네트워크를 쓰지 않습니다.",
       "author": {
         "name": "Isthis",
         "email": "rjsgmldnwn@gmail.com",

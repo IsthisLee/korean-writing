@@ -2,7 +2,7 @@
   <rect width="1280" height="640" fill="#1e2229"/>
 
   <text x="72" y="118" font-size="62" font-weight="700" fill="#f4f6f8" font-family="SF Mono, Menlo, Consolas, monospace">korean-writing</text>
-  <text x="72" y="166" font-size="27" fill="#aab3bf">Claude Code가 번역투와 AI 티 없는 한국어를 쓰게 하는 플러그인</text>
+  <text x="72" y="166" font-size="27" fill="#aab3bf">내가 쓰려고 분석한 한국어 도구들. 원하는 것만 묶고 맘대로 커스텀한 Claude Code 플러그인</text>
 
   <rect x="72" y="212" width="1136" height="228" rx="14" fill="#171b21" stroke="#2c323b" stroke-width="1"/>
 

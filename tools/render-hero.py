@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""README 맨 위 그림(docs/assets/hero*.svg)을 그린다. 한국어·영어 두 판을 어두운 테마와 밝은 테마로 하나씩 만든다.
+"""README 맨 위 그림(docs/assets/hero*.svg)을 그린다. 어두운 테마와 밝은 테마로 하나씩 만든다.
 
 왼쪽 문장은 정답 데이터(tests/ground-truth.json)에서 한 문장씩 그대로 뽑았다. Claude Code 가 실제로 썼던 문장이다.
 오른쪽은 규칙대로 고친 문장이다. 앞의 셋은 README 「문장, 전과 후」 표, K3 은 검사 훅 안내의 예시와 같고
@@ -16,26 +16,19 @@ from xml.sax.saxutils import escape
 REPO = pathlib.Path(__file__).resolve().parent.parent
 GT = {it["id"]: it["text"] for it in json.loads((REPO / "tests" / "ground-truth.json").read_text(encoding="utf-8"))}
 
-# (정답 데이터 id, 규칙 코드, 한국어 이름, 영어 이름, 고치기 전, 고친 뒤)
+# (정답 데이터 id, 규칙 코드, 규칙 이름, 고치기 전, 고친 뒤)
 ROWS = [
-    ("G06", "K6", "승패 의인화", "win/lose metaphor", "규칙이 충돌하면 상위 문서가 이깁니다", "규칙이 충돌하면 상위 문서를 따릅니다"),
-    ("G02", "K7", "사물 의인화", "objects acting", "시험용 장비가 몇 초 만에 쓰러졌습니다", "시험용 장비가 몇 초 만에 멈췄습니다"),
-    ("G05", "K2", "추상 구조어", "structure metaphors", "두 문제는 결이 다르고 레이어도 다릅니다", "두 문제는 성격이 다른 별개의 문제입니다"),
-    ("G04", "K3", "것 구문", "'geot' clauses", "바로 탈이 날 것들이었습니다", "바로 탈이 날 문제였습니다"),
-    ("G10", "K8", "번역투", "translationese", "로그를 가지고 있지 않아", "로그가 없어"),
+    ("G06", "K6", "승패 의인화", "규칙이 충돌하면 상위 문서가 이깁니다", "규칙이 충돌하면 상위 문서를 따릅니다"),
+    ("G02", "K7", "사물 의인화", "시험용 장비가 몇 초 만에 쓰러졌습니다", "시험용 장비가 몇 초 만에 멈췄습니다"),
+    ("G05", "K2", "추상 구조어", "두 문제는 결이 다르고 레이어도 다릅니다", "두 문제는 성격이 다른 별개의 문제입니다"),
+    ("G04", "K3", "것 구문", "바로 탈이 날 것들이었습니다", "바로 탈이 날 문제였습니다"),
+    ("G10", "K8", "번역투", "로그를 가지고 있지 않아", "로그가 없어"),
 ]
-TEXT = {
-    "ko": {"tag1": "Claude Code 플러그인", "tag2": "번역투와 AI 티 없는 한국어로 쓰게 합니다",
-           "left": "Claude Code가 실제로 쓴 문장", "right": "규칙대로 고친 문장",
-           "kcap": "K = 저장할 때 검사",
-           "stages": [("저장할 때", "검사 훅이 걸린 줄을 짚어 줌"), ("수정할 때", "im-not-ai로 윤문")],
-           "foot": "네트워크를 쓰지 않습니다 · MIT"},
-    "en": {"tag1": "A Claude Code plugin", "tag2": "Korean without translationese or AI tells",
-           "left": "Written by Claude Code", "right": "Fixed by the rules",
-           "kcap": "K = on-save check",
-           "stages": [("On save", "the hook points at flagged lines"), ("When revised", "im-not-ai polishing")],
-           "foot": "No network · MIT"},
-}
+TEXT = {"tag1": "원하는 것만 묶고 맘대로 커스텀한 Claude Code 플러그인", "tag2": "내가 쓰려고 분석한 한국어 도구들",
+        "left": "Claude Code가 실제로 쓴 문장", "right": "규칙대로 고친 문장",
+        "kcap": "K = 저장할 때 검사",
+        "stages": [("저장할 때", "검사 훅이 걸린 줄을 짚어 줌"), ("수정할 때", "im-not-ai로 윤문")],
+        "foot": "네트워크를 쓰지 않습니다 · MIT"}
 THEME = {
     "dark": {"bg": "#1e2229", "text": "#e6eaf0", "dim": "#9aa4b2", "before": "#ff8fa3", "after": "#7ee0a3",
              "chip": "#2d333d", "chipt": "#ffd166", "rule": "#39404b", "stage": "#262b33"},
@@ -66,8 +59,8 @@ def t(x, y, s, size, fill, weight=400, family=SANS, anchor="start"):
             f'fill="{fill}" text-anchor="{anchor}">{escape(s)}</text>')
 
 
-def render(lang, theme):
-    c, tx = THEME[theme], TEXT[lang]
+def render(theme):
+    c, tx = THEME[theme], TEXT
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
          f'<rect width="{W}" height="{H}" rx="16" fill="{c["bg"]}"/>',
          t(M, 112, "korean-writing", 56, c["text"], 700, MONO),
@@ -78,8 +71,8 @@ def render(lang, theme):
          t(X_BEFORE, 186, tx["left"], 15, c["before"], 700),
          t(X_AFTER, 186, tx["right"], 15, c["after"], 700)]
     y = 238
-    for _gid, code, ko, en, before, after in ROWS:
-        label = f"{code} {ko if lang == 'ko' else en}"
+    for _gid, code, name, before, after in ROWS:
+        label = f"{code} {name}"
         o.append(f'<rect x="{M}" y="{y - 22}" width="{X_BEFORE - M - 20}" height="32" rx="16" fill="{c["chip"]}"/>')
         o.append(t(M + 16, y, label, 15, c["chipt"], 700))
         o.append(t(X_BEFORE, y, before, 21, c["before"]))
@@ -102,11 +95,10 @@ def render(lang, theme):
 
 def main():
     check_fit()
-    for lang in ("ko", "en"):
-        for theme in ("dark", "light"):
-            name = "hero" + ("-light" if theme == "light" else "") + (".en" if lang == "en" else "") + ".svg"
-            (REPO / "docs" / "assets" / name).write_text(render(lang, theme), encoding="utf-8")
-            print("그렸다:", "docs/assets/" + name)
+    for theme in ("dark", "light"):
+        name = "hero" + ("-light" if theme == "light" else "") + ".svg"
+        (REPO / "docs" / "assets" / name).write_text(render(theme), encoding="utf-8")
+        print("그렸다:", "docs/assets/" + name)
 
 
 if __name__ == "__main__":
