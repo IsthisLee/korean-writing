@@ -174,7 +174,7 @@ def tech_frame(path):
         return sorted(csv.DictReader(f, delimiter="\t"), key=lambda e: e["company"])
 
 
-def collect(units, genre, prefix, per_unit, total, out, seed, stats, ex_urls, ex_authors):
+def collect(units, genre, prefix, per_unit, total, out, seed, stats, ex_urls, ex_authors, tries_per_unit=8):
     manifest = out / "human.tsv"
     have = len(list((out / "human").glob(f"{prefix}-*.txt")))
     for unit in units:
@@ -198,7 +198,7 @@ def collect(units, genre, prefix, per_unit, total, out, seed, stats, ex_urls, ex
             continue
         picked = 0
         order = random.Random(f"{seed}:{author}").sample(recs, len(recs))
-        for r in order[:8]:
+        for r in order[:tries_per_unit]:
             if picked >= per_unit or have >= total:
                 break
             if r["url"] in ex_urls:
@@ -232,6 +232,10 @@ def main():
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--companies", type=int, default=5)
     ap.add_argument("--per-company", type=int, default=2)
+    ap.add_argument("--per-author", type=int, default=1, help="개인 블로그 필자당 글 수(계획 4.1: 두 편까지)")
+    ap.add_argument("--tech-total", type=int, help="기술 블로그 전체 편수. 주지 않으면 companies × per-company")
+    ap.add_argument("--exclude-urls-only", action="store_true", help="이전 표본과 글 주소만 겹치지 않게 하고 회사·필자는 다시 쓸 수 있게 함")
+    ap.add_argument("--tries-per-unit", type=int, default=8, help="필자·회사 하나에서 열어 볼 수집본 글의 최대 수")
     ap.add_argument("--out", required=True)
     ap.add_argument("--seed", default="20260916")
     ap.add_argument("--exclude", nargs="*", default=[])
@@ -240,17 +244,20 @@ def main():
     out = pathlib.Path(a.out)
     (out / "human").mkdir(parents=True, exist_ok=True)
     ex_urls, _, ex_authors = excluded_keys(a.exclude + [str(out / "human.tsv")])
+    if a.exclude_urls_only:
+        _, _, ex_authors = excluded_keys([str(out / "human.tsv")])
     stats = {"no_capture": 0, "too_short": 0, "fetch_error": 0, "accepted": 0}
     if a.genre == "personal":
         units = personal_frame(a.db)
         random.Random(a.seed).shuffle(units)
         stats["frame_size"] = len(units)
-        collect(units, "personal", "personal", 1, a.n, out, a.seed, stats, ex_urls, ex_authors)
+        collect(units, "personal", "personal", a.per_author, a.n, out, a.seed, stats, ex_urls, ex_authors)
     else:
         units = tech_frame(a.frame)
         random.Random(a.seed).shuffle(units)
         stats["frame_size"] = len(units)
-        collect(units, "tech", "tech", a.per_company, a.companies * a.per_company, out, a.seed, stats, ex_urls, ex_authors)
+        total = a.tech_total or a.companies * a.per_company
+        collect(units, "tech", "tech", a.per_company, total, out, a.seed, stats, ex_urls, ex_authors, a.tries_per_unit)
     write_json(out / f"collect-{a.genre}-stats.json", stats)
     print(stats)
 
