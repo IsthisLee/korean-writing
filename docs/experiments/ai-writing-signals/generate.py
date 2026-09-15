@@ -6,7 +6,8 @@
 
 모델은 장르마다 id 순서로 claude-opus-5 와 claude-sonnet-5 를 번갈아 쓴다.
 사용자 설정, 훅, MCP, 도구를 모두 빼고 빈 폴더에서 돌린다. output style 은 켜지 않는다.
-분량이 목표의 ±20% 를 벗어나면 한 번 다시 쓰게 하고, 두 번째 결과는 벗어나도 그대로 두고 표시한다.
+1차 파일럿(2026-09-16)은 분량이 목표의 ±20% 를 벗어나면 한 번 다시 쓰게 했다. 다시 써도 대부분 짧았고
+분량은 분석 때 짝 맞춤(match.py)으로 맞추기로 했으므로, 그 뒤로는 한 번만 쓴다(MAX_ATTEMPTS).
 """
 import argparse
 import csv
@@ -20,6 +21,7 @@ import tempfile
 from common import hangul_count, normalize, read_manifest, write_json
 
 MODELS = ["claude-opus-5", "claude-sonnet-5"]
+MAX_ATTEMPTS = 1
 HERE = pathlib.Path(__file__).resolve().parent
 AI_FIELDS = ["id", "pair", "genre", "model", "title", "target_hangul", "hangul", "ratio", "attempts",
              "cost_usd", "duration_ms", "generated_at"]
@@ -69,7 +71,7 @@ def main():
         template = (HERE / "prompts" / f"{h['genre']}.txt").read_text(encoding="utf-8")
         prompt = template.format(title=h["title"], chars=f"{target:,}")
         cost = duration = 0
-        for attempt in (1, 2):
+        for attempt in range(1, MAX_ATTEMPTS + 1):
             data = run_claude(model, prompt, workdir)
             cost += data.get("total_cost_usd") or 0
             duration += data.get("duration_ms") or 0

@@ -41,6 +41,12 @@ $PY signals.py $OUT/clean/human/*.txt $OUT/clean/ai/*.txt --out $OUT/features
 $PY analyze.py --out $OUT
 $PY spotcheck.py --out $OUT
 
+# 3-1. 2차 파일럿부터: 짝마다 긴 쪽 글을 짧은 쪽 길이로 잘라 비교하고, 여러 지표를 합친 점수를 1차로 만들어 2차로 확인
+$PY match.py --src $OUT --dst $OUT-matched
+$PY signals.py $OUT-matched/clean/human/*.txt $OUT-matched/clean/ai/*.txt --out $OUT-matched/features
+$PY analyze.py --out $OUT-matched
+$PY score.py --train out/pilot-matched --test out/pilot2-matched --out out/pilot2-score
+
 # 4. 사후 진단(사전 등록 판정이 아님)
 $PY null_check.py --out $OUT --n 1000
 $PY lenmatch.py --src $OUT --dst $OUT-lenmatch
@@ -68,3 +74,5 @@ $PY analyze.py --out $OUT-lenmatch
 | `spotcheck.py` | 형태소 분석과 띄어쓰기 판정을 사람이 대조할 표를 만듦 |
 | `null_check.py` | 사후 진단: 사람/AI 표시를 무작위로 섞었을 때의 적중 수와 비교함 |
 | `lenmatch.py` | 사후 진단: 사람 글을 짝이 되는 AI 글 길이로 잘라 다시 비교할 사본을 만듦 |
+| `match.py` | 짝마다 긴 쪽 글을 짧은 쪽의 한글 글자 수에 맞춰 문장 경계에서 자름(2차 파일럿부터 주 분석) |
+| `score.py` | 지표 묶음마다 대표 지표의 로그 우도비를 더한 문서 점수를 한 실행으로 만들고 다른 실행으로 확인함 |

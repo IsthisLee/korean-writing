@@ -19,6 +19,11 @@ MANIFEST_FIELDS = [
     "date", "date_evidence", "hangul", "fetched_at",
 ]
 
+# 2026-09-16 1차 파일럿 뒤 결정: 본문에 명시적인 번역 표시가 있는 블로그 글은 뺀다.
+TRANSLATION_MARK = re.compile(
+    r"원문은|원문 ?보기|원문으로 가기|원문 ?링크|원문:|한국어 번역|번역한 (?:것|글)|번역했습니다|옮긴이|역자 주"
+    r"|Translated by|originally (?:published|posted)", re.I)
+
 _HANGUL = re.compile(r"[가-힣]")
 _FENCE = re.compile(r"^(```|~~~)[^\n]*\n.*?^\1[^\n]*$", re.S | re.M)
 

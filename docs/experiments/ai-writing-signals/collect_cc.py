@@ -24,7 +24,7 @@ import urllib.parse
 import trafilatura
 import yaml
 
-from common import CUTOFF_CDX, MIN_HANGUL, append_manifest, excluded_keys, hangul_count, http_get, normalize, write_json
+from common import CUTOFF_CDX, MIN_HANGUL, TRANSLATION_MARK, append_manifest, excluded_keys, hangul_count, http_get, normalize, write_json
 
 INDEX = "https://index.commoncrawl.org/{}-index"
 DATA = "https://data.commoncrawl.org/"
@@ -136,6 +136,8 @@ def take(r, genre, author, doc_id, out):
     n = hangul_count(text)
     if n < MIN_HANGUL:
         return None, n
+    if TRANSLATION_MARK.search(text):
+        return None, -2  # 명시적 번역 표시가 있는 글은 뺀다(2026-09-16 파일럿 뒤 결정)
     if genre == "tech" and not re.search(r'og:type["\']?\s+content=["\']article|"@type"\s*:\s*"(?:Blog)?Posting|"@type"\s*:\s*"(?:Tech)?Article', page):
         return None, -1  # 글 목록이나 소개 쪽을 거르려고 글 쪽 표시(og:type article, JSON-LD)를 요구한다
     meta = trafilatura.extract_metadata(page, default_url=r["url"])
@@ -207,7 +209,8 @@ def collect(units, genre, prefix, per_unit, total, out, seed, stats, ex_urls, ex
                 print("skip", r["url"], type(e).__name__, e, flush=True)
                 continue
             if row is None:
-                stats["too_short"] += 1
+                reason = {-2: "translation_marker", -1: "not_article"}.get(n, "too_short")
+                stats[reason] = stats.get(reason, 0) + 1
                 continue
             have += 1
             picked += 1
