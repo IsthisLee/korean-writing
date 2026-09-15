@@ -23,10 +23,8 @@
 
 ## 문서를 바꿨다면
 
-- [ ] `README.md` 와 `README.en.md` 를 같이 고쳤습니다
 - [ ] 가져온 파일을 고쳤다면 `plugin/NOTICE.md` 의 수정 범위도 고쳤습니다
 
 <!--
-English is welcome. See CONTRIBUTING.en.md.
 Please do not bump the version by hand: plugin.json is the single source of truth.
 -->

@@ -1,7 +1,5 @@
 # 도움 받는 곳
 
-<p><strong>한국어</strong> · <a href="#getting-help">English</a></p>
-
 무엇을 물어볼지에 따라 가는 곳이 다릅니다. 이슈를 열기 전에 여기서 골라 주세요.
 
 | 상황                                            | 가는 곳                                                                                                        |
@@ -21,31 +19,3 @@
 오탐과 버그는 재현이 전부입니다. 걸린 문장을 그대로, `plugin/scripts/check.sh` 의 출력을 그대로 붙여 주세요. 요약하면 어느 규칙이 걸렸는지 저희 쪽에서 다시 찾아야 합니다.
 
 이 저장소는 한 사람이 짬을 내 관리합니다. 답이 며칠 늦을 수 있습니다. 보안 신고만 영업일 기준 5일 안에 접수 여부를 알려 드립니다.
-
----
-
-<a id="getting-help"></a>
-
-# Getting help
-
-<p><a href="#도움-받는-곳">한국어</a> · <strong>English</strong></p>
-
-Where to go depends on what you need. Please pick from this list before opening an issue.
-
-| Situation                                     | Where to go                                                                                                       |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Installing or using the plugin                | Start with the install section of the [README](README.en.md)                                                        |
-| Not sure why the hook flagged a sentence      | [EVALUATION.md](EVALUATION.md) lists the K rules and the measurements behind each                                  |
-| You want to turn the hook off                 | Toggle `edit_check` in `/plugin`. Environment variables work too ([SECURITY.md](SECURITY.md))                     |
-| The hook flagged human-written prose          | [False positive](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml)        |
-| The hook missed an AI tell                    | [Rule proposal](https://github.com/IsthisLee/korean-writing/issues/new?template=rule.yml)                     |
-| A hook or script crashes                      | [Bug report](https://github.com/IsthisLee/korean-writing/issues/new?template=bug.yml)                         |
-| You found a vulnerability                     | Do not open a public issue. [Report privately](https://github.com/IsthisLee/korean-writing/security/advisories/new) |
-| You want to discuss how a rule should work    | [Discussions](https://github.com/IsthisLee/korean-writing/discussions)                                       |
-| You want to send a patch                      | [CONTRIBUTING.en.md](CONTRIBUTING.en.md)                                                                            |
-
-## What helps in an issue
-
-For false positives and bugs, reproduction is everything. Paste the flagged sentence verbatim and the raw output of `plugin/scripts/check.sh`. A summary means we have to work out which rule fired.
-
-One person maintains this repository in spare time, so a reply may take a few days. Security reports are the exception: you get an acknowledgement within 5 business days.

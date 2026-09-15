@@ -312,7 +312,7 @@ jobs:
           import json, re, sys, pathlib
           ver = json.load(open("plugin/.claude-plugin/plugin.json"))["version"]
           bad = []
-          for p in ("README.md", "README.en.md"):
+          for p in ("README.md",):
               s = pathlib.Path(p).read_text(encoding="utf-8")
               m = re.search(r"badge/version-([^-]+)-lightgrey", s)
               if not m:

@@ -9,8 +9,8 @@
 #   1. 검사: 작업 트리 clean, 버전 형식, 새 버전이 현재 이상, 같은 태그 없음
 #   2. CHANGELOG: [Unreleased] 의 내용을 [<버전>] - <오늘> 절로 옮기고 비교 링크를 갱신한다
 #      (비어 있으면 중단. 릴리스 노트를 먼저 쓴다)
-#   3. README.md·README.en.md 상단 인용구에 v<버전> 이 있어야 한다 (없으면 중단)
-#   4. 버전 반영: plugin.json, 두 README 의 version 배지
+#   3. README.md 상단 인용구에 v<버전> 이 있어야 한다 (없으면 중단)
+#   4. 버전 반영: plugin.json, README 의 version 배지
 #   5. 회귀 테스트, claude plugin validate
 #   6. 커밋 "release: v<버전>", 주석 태그 v<버전> (메시지는 CHANGELOG 절)
 #   7. --push 면 git push --follow-tags. GitHub 릴리스는 태그를 받은
@@ -61,7 +61,7 @@ io.open(p, "w", encoding="utf-8").write(s)
 PY
 
 # 3. README 릴리스 인용구
-for f in README.md README.en.md; do
+for f in README.md; do
   grep -q "v$VER" "$f" || fail "$f 상단 릴리스 인용구에 v$VER 이 없다. 릴리스 노트를 먼저 쓴다"
 done
 
@@ -76,7 +76,7 @@ io.open(p, "w", encoding="utf-8").write(s)
 p = ".claude-plugin/marketplace.json"; s = io.open(p, encoding="utf-8").read()
 s = re.sub(r'("version":\s*")[^"]+(")', lambda m: m.group(1) + ver + m.group(2), s, count=2)
 io.open(p, "w", encoding="utf-8").write(s)
-for p in ("README.md", "README.en.md"):
+for p in ("README.md",):
     s = io.open(p, encoding="utf-8").read()
     s = re.sub(r"(badge/version-)[^-]+(-lightgrey)", lambda m: m.group(1) + ver + m.group(2), s)
     io.open(p, "w", encoding="utf-8").write(s)
