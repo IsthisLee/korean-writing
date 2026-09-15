@@ -1,1 +1,0 @@
-{"hooks":{"SessionStart":[{"matcher":"startup","hooks":[{"type":"command","command":"plugin/hooks-handlers/sessionstart.sh","timeout":10}]}]}}

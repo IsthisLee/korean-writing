@@ -1,1 +1,0 @@
-Explain the difference between a process and a thread in two short paragraphs.

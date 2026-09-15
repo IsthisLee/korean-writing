@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""README 맨 위 그림(docs/hero*.svg)을 그린다. 한국어·영어 두 판을 어두운 테마와 밝은 테마로 하나씩 만든다.
+"""README 맨 위 그림(docs/assets/hero*.svg)을 그린다. 한국어·영어 두 판을 어두운 테마와 밝은 테마로 하나씩 만든다.
 
 왼쪽 문장은 정답 데이터(tests/ground-truth.json)에서 한 문장씩 그대로 뽑았다. Claude Code 가 실제로 썼던 문장이다.
 오른쪽은 규칙대로 고친 문장이다. 앞의 셋은 README 「문장, 전과 후」 표, K3 은 검사 훅 안내의 예시와 같고
@@ -105,8 +105,8 @@ def main():
     for lang in ("ko", "en"):
         for theme in ("dark", "light"):
             name = "hero" + ("-light" if theme == "light" else "") + (".en" if lang == "en" else "") + ".svg"
-            (REPO / "docs" / name).write_text(render(lang, theme), encoding="utf-8")
-            print("그렸다:", "docs/" + name)
+            (REPO / "docs" / "assets" / name).write_text(render(lang, theme), encoding="utf-8")
+            print("그렸다:", "docs/assets/" + name)
 
 
 if __name__ == "__main__":

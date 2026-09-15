@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""README 의 훅 출력 그림(docs/hook-output.svg)을 실제 훅 출력으로 다시 그린다.
+"""README 의 훅 출력 그림(docs/assets/hook-output.svg)을 실제 훅 출력으로 다시 그린다.
 
 정답 데이터(tests/ground-truth.json)의 문장으로 7줄짜리 문서를 만들어 훅에 넣고 그 stderr 를
 글자 하나 바꾸지 않고 옮긴다. 화면 틀(프롬프트와 Write 줄)만 그린 것이고 노란 줄부터가 훅의 출력이다.
 훅의 안내 문구를 바꿨으면 이 스크립트를 다시 돌려 그림을 맞춘다.
 
-사용: python3 tools/render-hook-output.py           docs/hook-output.svg 를 다시 쓴다
+사용: python3 tools/render-hook-output.py           docs/assets/hook-output.svg 를 다시 쓴다
       python3 tools/render-hook-output.py --print   그림 대신 입력 문서와 훅 출력을 찍는다
 """
 import json
@@ -20,7 +20,7 @@ from xml.sax.saxutils import escape
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 HOOK = REPO / "plugin" / "hooks-handlers" / "posttooluse.sh"
-OUT = REPO / "docs" / "hook-output.svg"
+OUT = REPO / "docs" / "assets" / "hook-output.svg"
 NAME = "배포-지연.md"
 
 G = {it["id"]: it["text"] for it in json.loads((REPO / "tests" / "ground-truth.json").read_text(encoding="utf-8"))}

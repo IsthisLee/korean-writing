@@ -14,7 +14,7 @@ Claude Code 가 쓰는 한국어 글의 품질과 자연스러움을 맡는 플�
 plugin/     설치본. 매니페스트·훅·스킬·에이전트·명령·런타임 스크립트·LICENSE·NOTICE
 tests/      회귀 테스트와 정답 데이터
 tools/      관리자 스크립트(release·measure·install-git-hook·guard·그림 그리기)
-docs/        실험과 그림
+docs/        그림(assets)·실험·표본
 .github/    CI·이슈 양식·CI 전용 npm 도구
 루트 문서    README·CHANGELOG·EVALUATION·CONTRIBUTING·SECURITY·SUPPORT·CODE_OF_CONDUCT
 ```

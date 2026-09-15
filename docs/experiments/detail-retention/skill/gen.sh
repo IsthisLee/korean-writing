@@ -4,7 +4,7 @@
 # 사용  : gen.sh <과제> <A|S|N|M> <표본 번호>
 #         A 는 스킬 없음, S 는 docs/experiments/writing-skill.md(2026-09-15 에 뺀 작성 스킬 본문)를 시스템 프롬프트에 붙임, N 은 같은 글자 수의 무관한 문서를 붙임
 #         M 은 스킬에 「설명은 넉넉히」 지시를 더한 것이다. 확인 창의 둘째 선택지가 실제로 설명을 되살리는지 잰다.
-#         M 에 붙이는 문구는 plugin/hooks-handlers/pretooluse-skill.sh 가 그 선택지에 지시하는 말과 같아야 한다.
+#         M 의 문구는 2026-09-14 에 뺀 쓰기 전 확인 훅의 둘째 선택지 문구를 옮긴 것이다.
 #         과제는 prompts/ 의 파일 이름(notice·incident·debounce)이다. N 을 쓰기 전에 make_neutral.py 를 돌린다.
 # 출력  : ../out/skill/<과제>_<조건>_<표본>.json  (docs/experiments/*/out/ 은 커밋하지 않는다)
 # 환경  : KW_MODEL 로 생성 모델을 바꾼다(기본 claude-sonnet-5)

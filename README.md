@@ -1,7 +1,7 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/hero.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/hero-light.svg">
-  <img src="docs/hero.svg" alt="korean-writing: Claude Code가 실제로 쓴 문장과 규칙대로 고친 문장, 저장할 때·수정할 때 두 시점" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/hero.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/hero-light.svg">
+  <img src="docs/assets/hero.svg" alt="korean-writing: Claude Code가 실제로 쓴 문장과 규칙대로 고친 문장, 저장할 때·수정할 때 두 시점" width="100%">
 </picture>
 
 <p align="center">
@@ -41,8 +41,6 @@
   <a href="#자주-묻는-질문">FAQ</a>
 </p>
 
-> **v2.1.0**: 스킬을 적용할지 여부를 권한 창 대신 Claude가 한국어로 물으며, 「적용 안 함」을 선택하더라도 작업이 멈추지 않습니다. 자세한 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 정리되어 있습니다.
-
 ## 개요
 
 Claude Code가 출력하는 한국어는 문법적으로 틀리지 않습니다. 그런데도 읽어 보면 어딘가 걸립니다. 영어의 어순을 그대로 옮긴 문장, 영어에서 건너온 비유, 그리고 어느 문서에서나 같은 자리에 놓이는 상투적인 표현이 그 원인입니다.
@@ -75,7 +73,7 @@ Claude Code가 출력하는 한국어는 문법적으로 틀리지 않습니다.
 
 `.md` 파일을 고쳤을 때 Claude Code 화면에 나오는 모습입니다. 화면 틀은 그린 것이며 노란 줄부터는 훅이 실제로 출력한 내용 그대로입니다.
 
-<p align="center"><img src="docs/hook-output.svg" alt="훅이 K1·K2·K3·K7을 잡은 실제 출력" width="860"></p>
+<p align="center"><img src="docs/assets/hook-output.svg" alt="훅이 K1·K2·K3·K7을 잡은 실제 출력" width="860"></p>
 
 걸린 자리마다 줄 번호와 발췌가 붙으므로 Claude는 그 자리만 고칩니다. 이 출력은 Claude에게도 그대로 전달됩니다. Claude Code는 종료 코드 2로 끝난 PostToolUse 훅의 stderr를 같은 턴에 Claude에게 보여 주기 때문입니다([실험](./docs/experiments/hook-loop/)).
 
@@ -290,7 +288,7 @@ korean-writing/
 ├── tests/                 ── 아래는 저장소에만 있습니다 ──
 │                          회귀 테스트와 정답 데이터
 ├── tools/                 관리자 스크립트(가드·릴리스·측정·그림)
-├── docs/                  배너, 윤문 실행 기록, 실험, foundations.md
+├── docs/                  그림(assets), 실험, 표본, foundations.md
 ├── EVALUATION.md          합격 기준과 측정 결과
 ├── CLAUDE.md              이 저장소에서 작업하는 Claude의 규칙
 └── README.md·README.en.md

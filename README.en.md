@@ -1,7 +1,7 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/hero.en.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/hero-light.en.svg">
-  <img src="docs/hero.en.svg" alt="korean-writing: sentences Claude Code actually wrote next to the same sentences fixed by the rules, and the two moments it covers" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/hero.en.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/hero-light.en.svg">
+  <img src="docs/assets/hero.en.svg" alt="korean-writing: sentences Claude Code actually wrote next to the same sentences fixed by the rules, and the two moments it covers" width="100%">
 </picture>
 
 <p align="center">
@@ -41,8 +41,6 @@
   <a href="#faq">FAQ</a>
 </p>
 
-> **v2.1.0**: Claude now asks in Korean whether to apply the skill instead of raising a permission prompt, and choosing not to apply no longer stops the work. Details: [CHANGELOG.md](CHANGELOG.md)
-
 ## Overview
 
 Claude Code's Korean is grammatically fine. It still reads wrong: word order carried over from English, metaphors that arrived through English, and stock phrases that land in the same spot of every document.
@@ -75,7 +73,7 @@ What the rules are after is easiest to see in the ground truth, before and after
 
 This is what appears in Claude Code after a `.md` edit. The window frame is drawn; from the yellow line down it is the hook's actual output, unchanged.
 
-<p align="center"><img src="docs/hook-output.svg" alt="Hook output flagging K1, K2, K3 and K7" width="860"></p>
+<p align="center"><img src="docs/assets/hook-output.svg" alt="Hook output flagging K1, K2, K3 and K7" width="860"></p>
 
 Each flagged spot carries its line number and an excerpt, so Claude fixes only those spots. This output goes back to Claude too: Claude Code shows the stderr of a PostToolUse hook that exits 2 to Claude in the same turn ([experiment](./docs/experiments/hook-loop/)).
 
@@ -288,7 +286,7 @@ korean-writing/
 ├── tests/                 everything below stays in the repository:
 │                          regression tests and ground truth
 ├── tools/                 maintainer scripts (guard, release, measure, images)
-├── docs/                  banners, a polishing run log, experiments, foundations.md
+├── docs/                  images (assets), experiments, samples, foundations.md
 ├── EVALUATION.md          pass criteria and measurements
 ├── CLAUDE.md              rules for Claude working in this repository
 └── README.md·README.en.md

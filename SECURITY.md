@@ -41,7 +41,7 @@
 | 외부 의존성     | 없습니다. 표준 라이브러리만 씁니다                                                        |
 | 결과            | stderr 에 걸린 항목을 적고 종료 코드 2 로 끝냅니다. 편집을 되돌리지 않습니다              |
 
-네트워크를 쓰지 않는다는 것은 직접 확인할 수 있습니다. 스크립트는 408줄입니다. 1번은 `import sys, json, re, os, fnmatch` 한 줄만 나오고 2번과 3번은 아무것도 나오지 않아야 정상입니다.
+네트워크를 쓰지 않는다는 것은 직접 확인할 수 있습니다. 스크립트는 379줄입니다. 1번은 `import sys, json, re, os, fnmatch` 한 줄만 나오고 2번과 3번은 아무것도 나오지 않아야 정상입니다.
 
 ```bash
 # 1. 파이썬이 불러오는 모듈. sys, json, re, os, fnmatch 한 줄만 나옵니다
@@ -107,19 +107,19 @@ You will get an acknowledgement within 5 business days. If a fix is needed, an a
 
 ## What this plugin does
 
-Installing it means two shell scripts run automatically: one every time you edit a `.md` file, the other right before Claude calls the `korean-writing` skill. Here is exactly what the first one does:
+Installing it means one shell script runs automatically every time you edit a `.md` file. Here is exactly what it does:
 
 | Item              | Reality                                                                       |
 | ----------------- | ----------------------------------------------------------------------------- |
 | When it runs      | Right after `Edit` / `Write` / `MultiEdit` (PostToolUse)                        |
 | What it executes  | bash and python3 inside `plugin/hooks-handlers/posttooluse.sh`, nothing else           |
-| What it reads     | The edited content; the edited `.md` file (to count em dashes and commas across the whole file and to find line numbers for flagged spots); the first `.korean-writing.json` found walking up to the repository root |
+| What it reads     | The edited content; the edited `.md` file (to count em dashes across the whole file and to find line numbers for flagged spots); the first `.korean-writing.json` found walking up to the repository root |
 | What it writes    | Nothing. It never modifies or creates files                                    |
 | Network           | None. Your text never leaves your machine                                      |
 | Dependencies      | None. Standard library only                                                    |
 | Output            | Writes findings to stderr, exits 2. It never reverts your edit                  |
 
-You can verify the network claim yourself. The script is 408 lines. The first command should print a single `import sys, json, re, os, fnmatch` line; the other two should print nothing:
+You can verify the network claim yourself. The script is 379 lines. The first command should print a single `import sys, json, re, os, fnmatch` line; the other two should print nothing:
 
 ```bash
 # 1. Python imports. Prints one line: sys, json, re, os, fnmatch
