@@ -9,7 +9,7 @@
 - [ ] `python3 tests/test_posttooluse.py`
 - [ ] `plugin/scripts/check.sh <고친 .md 파일>`
 
-## 판정 규칙(K1~K10)을 바꿨다면
+## 판정 규칙(K 코드)을 바꿨다면
 
 <!-- 규칙을 안 건드렸으면 이 절은 지우세요. -->
 

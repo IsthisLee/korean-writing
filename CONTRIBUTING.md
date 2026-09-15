@@ -38,7 +38,7 @@ macOS 와 Linux 에서 CI 가 돌고 있습니다. Windows 는 Git Bash 나 WSL 
 
 ## 판정 규칙을 바꾸려면 실측이 있어야 합니다
 
-`plugin/hooks-handlers/posttooluse.sh` 의 K1~K10 을 넣거나 빼거나 임계를 조정하는 변경은 **숫자를 함께 보내 주세요.** 느낌으로 조정하면 오탐이 조용히 늘어납니다.
+`plugin/hooks-handlers/posttooluse.sh` 의 K 규칙을 넣거나 빼거나 임계를 조정하는 변경은 **숫자를 함께 보내 주세요.** 느낌으로 조정하면 오탐이 조용히 늘어납니다.
 
 ```bash
 tools/measure.sh ~/내문서폴더 ~/다른폴더

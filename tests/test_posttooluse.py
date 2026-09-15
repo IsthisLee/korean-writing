@@ -25,7 +25,7 @@ REPO = HERE.parent
 PLUGIN = pathlib.Path(os.environ.get("KW_PLUGIN_ROOT") or (REPO / "plugin")).resolve()
 HANDLERS = PLUGIN / "hooks-handlers"
 HOOK = HANDLERS / "posttooluse.sh"
-CODES = ("K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10")
+CODES = ("K1", "K2", "K3", "K4", "K6", "K7", "K8")
 FILLER = "이번 배포에서 고칠 곳이 나왔다. 담당자가 수강생을 옮기면 기록이 남는다. "
 FAILS = []
 
@@ -148,22 +148,28 @@ expect_clean(
     "| 축이 두 개다. 세 갈래다 | 기준이 두 개다. 세 가지다 |\n",
 )
 
-expect_clean("부정 대구 2회는 통과 (임계 3)", FILLER * 2 + "이것은 성능 문제가 아니라 설정 문제다. 고칠 곳은 코드가 아니라 문서다.")
+# 2026-09-14 에 뺀 규칙. 고치는 법이 문장 성분을 살려 쓰라는 문체 지침과 부딪혔다 (EVALUATION.md O).
 expect_clean(
-    "조건절 아니라면·아니라서는 대구가 아니다",
-    FILLER * 2 + "기준이 이번 주가 아니라면 날짜만 고친다. 원인이 설정이 아니라서 더 봐야 한다. "
-    "값이 숫자가 아니라면 그대로 둔다.",
+    "첫째·둘째 열거는 잡지 않는다 (K5 뺌)",
+    FILLER * 2 + "첫째, 기록이 어긋난다. 둘째, 화면이 멈춘다. 셋째, 캐시가 안 바뀐다.",
 )
 expect_clean(
-    "연결어미 뒤 쉼표 5회는 통과 (임계 6, 비율 100%)",
-    FILLER * 2 + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, 태그를 달았다.",
+    "부정 대구 3회도 잡지 않는다 (K9 뺌)",
+    FILLER * 2 + "이것은 성능 문제가 아니라 설정 문제다. 고칠 곳은 코드가 아니라 문서다. "
+    "필요한 것은 새 기능이 아니라 기준이다.",
 )
 expect_clean(
-    "연결어미 뒤 쉼표 6회여도 비율이 30% 미만이면 통과 (6/21 = 28.6%)",
-    FILLER + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, 태그를 달았고, 배포를 마쳤다. "
-    + "설정을 읽고 값을 채우고 결과를 남기고 로그를 쌓고 화면에 뿌리고 기록을 지우고 "
-    + "다시 읽고 다시 채우고 다시 남기고 다시 쌓고 다시 뿌리고 다시 지우고 "
-    + "마지막으로 검사하고 확인하고 정리하고 끝낸다.",
+    "연결어미 뒤 쉼표 7회도 잡지 않는다 (K10 뺌)",
+    FILLER * 2 + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, 태그를 달았고, 로그를 남겼고, 배포를 마쳤다.",
+)
+expect_clean(
+    "접속 표현과 「라고 할 수 있다」는 잡지 않는다 (K4 줄임)",
+    FILLER * 2 + "결론적으로 고칠 곳이 많다. 종합하면 일정이 밀린다. 요약하자면 둘 다 필요하다. "
+    "중요한 점은 기록이다. 원인은 설정이라고 할 수 있다.",
+)
+expect_clean(
+    "「-게 되다」 보조 용언은 잡지 않는다 (K8 줄임)",
+    FILLER * 2 + "변경 내용은 공지로 알려지게 된다. 새 규칙은 다음 주부터 지켜지게 된다.",
 )
 
 print("\n걸려야 하는 것 - 미탐 검사")
@@ -182,14 +188,9 @@ expect_hit(
 )
 expect_hit(
     "K4 AI 관용구",
-    "결론적으로 이번 변경은 혁신적이다. 종합하면 시사하는 바가 크다. 주목할 만한 개선이다.",
+    "이번 변경은 혁신적이다. 시사하는 바가 크다. 개선이 주목할 만하다. 설계도 획기적이고 성능은 압도적이다.",
     "K4",
-    count=4,
-)
-expect_hit(
-    "K5 기계적 병렬",
-    FILLER * 2 + "첫째, 기록이 어긋난다. 둘째, 화면이 멈춘다. 셋째, 캐시가 안 바뀐다.",
-    "K5",
+    count=5,
 )
 expect_hit(
     "K6 승패 의인화 2회",
@@ -216,39 +217,21 @@ expect_hit(
     "담당자가 로그를 가지고 있지 않아 원인을 확인하지 못했다. 다시 살펴봐야 한다.",
     "K8",
 )
-expect_hit(
-    "K9 부정 대구 3회",
-    FILLER * 2 + "이것은 성능 문제가 아니라 설정 문제다. 고칠 곳은 코드가 아니라 문서다. "
-    "필요한 것은 새 기능이 아니라 기준이다.",
-    "K9",
-    count=3,
-)
-expect_hit(
-    "K10 비율 46%도 걸린다 (6/13, 임계 30%)",
-    FILLER + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, 태그를 달았고, 배포를 마쳤다. "
-    "설정을 읽고 값을 채우고 결과를 남기고 로그를 쌓고 화면에 뿌리고 기록을 지우고 마지막으로 정리하고 끝낸다.",
-    "K10",
-    count=6,
-)
-expect_hit(
-    "K10 연결어미 뒤 쉼표 6회",
-    FILLER * 2 + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, 태그를 달았고, 배포를 마쳤다.",
-    "K10",
-    count=6,
-)
-
-print("\n안내 - 고치면서 정보를 지우게 하지 않는다 (EVALUATION.md I1)")
+print("\n안내 - 고치면서 정보와 문장 성분을 지우게 하지 않는다 (EVALUATION.md I1, O)")
 # 모델은 훅이 알린 대로 고친다. 옛 K9 안내 「A가 아니라 B다 → B다」 는 부정한 쪽의 정보를 지우게 했다.
 # 대조군 6건에서 9건이 사라졌고 규칙집(rewriting-playbook.md) 처방대로 고치자 0건이 됐다.
+# 2026-09-14 에는 접속 표현을 지우거나 문장을 나누라는 안내를 뺐다. 조사·어미·접속 표현을 살려 쓰라는 지침과 부딪혔다.
 _, out = run(
-    FILLER * 2 + "이것은 성능 문제가 아니라 설정 문제다. 고칠 곳은 코드가 아니라 문서다. "
-    "필요한 것은 새 기능이 아니라 기준이다. 첫째, 기록이 어긋난다. 둘째, 화면이 멈춘다. 결론적으로 고칠 곳이 많다."
+    FILLER * 2 + "가 — 나. 다 — 라. 마 — 바. 사 — 아. 이번 변경은 혁신적이다. "
+    "담당자가 로그를 가지고 있지 않다."
 )
 for name, want, ban in [
-    ("K9 는 부정한 쪽의 정보를 버리지 않게 한다", "버리지 않고", "→ B다"),
-    ("K5 는 뼈대인 열거의 순서와 개수를 두게 한다", "순서와 개수", None),
-    ("K4 는 유보를 단정으로 올리지 않게 한다", "유보를 단정으로 올리지 않는다", "대부분 삭제해도"),
+    ("K1 은 문장 사이의 관계를 접속사나 콜론으로 남기게 한다", "접속사나 콜론", "문장 분리로 바꾼다"),
+    ("K4 는 없는 근거를 지어내지 않게 한다", "없는 수치나 사실을 지어내지 않는다", "지운다"),
+    ("K8 은 행위 주체를 지어내지 않게 한다", "주체를 모르면 지어내지 않는다", "능동으로 바꾸"),
     ("걸린 표현만 고치고 수치·조건·유보는 두게 한다", "걸린 표현만 고친다", None),
+    ("고칠 때 문장 성분을 빼서 줄이지 않게 한다", "빼서 문장을 줄이지 않는다", None),
+    ("알림이 작성 스킬의 규칙으로 보내지 않는다", "korean-writing: ignore", "스킬에 있다"),
 ]:
     if want in out and (ban is None or ban not in out):
         print(f"  o {name}")
@@ -300,31 +283,32 @@ expect_hit(
 )
 
 print("\n규칙 골라 끄기 - 끈 규칙만 빠지고 나머지는 그대로 걸린다")
-BAD2 = (FILLER * 2 + "이것은 성능 문제가 아니라 설정 문제다. 고칠 곳은 코드가 아니라 문서다. "
-        "필요한 것은 새 기능이 아니라 기준이다. 결론적으로 고칠 곳이 많다.")
-expect_hit("끄지 않으면 K9 가 걸린다", BAD2, "K9", count=3)
+BAD2 = (FILLER * 2 + "규칙이 충돌하면 상위 문서가 이깁니다. 둘 다 값이 있으면 텍스트가 이기고 참조는 무시됩니다. "
+        "이번 변경은 혁신적이다.")
+expect_hit("끄지 않으면 K6 이 걸린다", BAD2, "K6", count=2)
 expect_hit("끄지 않으면 K4 도 걸린다", BAD2, "K4")
-expect_without("파일 머리 disable K9 는 K9 를 끈다", "<!-- korean-writing: disable K9 -->\n" + BAD2, "K9")
-expect_hit("파일 머리 disable K9 여도 K4 는 걸린다", "<!-- korean-writing: disable K9 -->\n" + BAD2, "K4")
-expect_clean("쉼표·소문자로 둘 다 끄면 통과", "<!-- korean-writing: disable K9, k4 -->\n" + BAD2)
+expect_without("파일 머리 disable K6 은 K6 을 끈다", "<!-- korean-writing: disable K6 -->\n" + BAD2, "K6")
+expect_hit("파일 머리 disable K6 이어도 K4 는 걸린다", "<!-- korean-writing: disable K6 -->\n" + BAD2, "K4")
+expect_clean("쉼표·소문자로 둘 다 끄면 통과", "<!-- korean-writing: disable K6, k4 -->\n" + BAD2)
 expect_hit(
     "머리 10줄 밖의 disable 은 끄지 않는다",
-    "\n".join(["첫 줄부터 열 줄을 채운다."] * 11) + "\n<!-- korean-writing: disable K9 -->\n" + BAD2,
-    "K9",
+    "\n".join(["첫 줄부터 열 줄을 채운다."] * 11) + "\n<!-- korean-writing: disable K6 -->\n" + BAD2,
+    "K6",
 )
 expect_hit(
     "본문이 disable 표시를 인용해도 끄지 않는다",
-    "한두 규칙만 끄려면 `<!-- korean-writing: disable K9 -->` 를 넣습니다.\n\n" + BAD2,
-    "K9",
+    "한두 규칙만 끄려면 `<!-- korean-writing: disable K6 -->` 를 넣습니다.\n\n" + BAD2,
+    "K6",
 )
 _head = os.path.join(tempfile.mkdtemp(), "head.md")
 with open(_head, "w", encoding="utf-8") as _f:
-    _f.write("<!-- korean-writing: disable K9 -->\n# 설계 메모\n\n" + BAD2 + "\n")
-expect_without("Edit 로 일부만 고칠 때도 파일 머리의 disable 을 본다", BAD2, "K9", path=_head, tool="Edit", key="new_string")
-expect_without("환경변수 KOREAN_WRITING_DISABLE_RULES=K9", BAD2, "K9", env={"KOREAN_WRITING_DISABLE_RULES": "K9"})
-expect_without("플러그인 설정 disabled_rules=K9", BAD2, "K9", env={"CLAUDE_PLUGIN_OPTION_DISABLED_RULES": "K9"})
-expect_clean("걸린 규칙을 모두 끄면 통과", BAD2, env={"KOREAN_WRITING_DISABLE_RULES": "K4 K9"})
-expect_hit("모르는 코드는 무시한다", BAD2, "K9", env={"KOREAN_WRITING_DISABLE_RULES": "K99,X9,9"})
+    _f.write("<!-- korean-writing: disable K6 -->\n# 설계 메모\n\n" + BAD2 + "\n")
+expect_without("Edit 로 일부만 고칠 때도 파일 머리의 disable 을 본다", BAD2, "K6", path=_head, tool="Edit", key="new_string")
+expect_without("환경변수 KOREAN_WRITING_DISABLE_RULES=K6", BAD2, "K6", env={"KOREAN_WRITING_DISABLE_RULES": "K6"})
+expect_without("플러그인 설정 disabled_rules=K6", BAD2, "K6", env={"CLAUDE_PLUGIN_OPTION_DISABLED_RULES": "K6"})
+expect_clean("걸린 규칙을 모두 끄면 통과", BAD2, env={"KOREAN_WRITING_DISABLE_RULES": "K4 K6"})
+expect_hit("모르는 코드는 무시한다", BAD2, "K6", env={"KOREAN_WRITING_DISABLE_RULES": "K99,X9,9"})
+expect_hit("뺀 코드(K5·K9·K10)를 적어도 남은 규칙은 꺼지지 않는다", BAD2, "K6", env={"KOREAN_WRITING_DISABLE_RULES": "K5,K9,K10"})
 
 print("\n저장소 설정 - .korean-writing.json")
 _repo = tempfile.mkdtemp()
@@ -332,39 +316,39 @@ os.makedirs(os.path.join(_repo, ".git"))
 os.makedirs(os.path.join(_repo, "docs", "deep"))
 os.makedirs(os.path.join(_repo, "legal"))
 with open(os.path.join(_repo, ".korean-writing.json"), "w", encoding="utf-8") as _f:
-    json.dump({"disable": ["K9"], "ignore": ["legal/*", "CHANGELOG.md"]}, _f)
-expect_without("저장소 루트 설정의 disable 이 하위 폴더에도 든다", BAD2, "K9", path=os.path.join(_repo, "docs", "deep", "a.md"))
+    json.dump({"disable": ["K6"], "ignore": ["legal/*", "CHANGELOG.md"]}, _f)
+expect_without("저장소 루트 설정의 disable 이 하위 폴더에도 든다", BAD2, "K6", path=os.path.join(_repo, "docs", "deep", "a.md"))
 expect_hit("저장소 설정이 끄지 않은 규칙은 걸린다", BAD2, "K4", path=os.path.join(_repo, "docs", "deep", "a.md"))
 expect_clean("ignore 패턴에 맞는 파일은 검사하지 않는다", BAD2, path=os.path.join(_repo, "legal", "terms.md"))
 expect_clean("ignore 의 파일 이름 패턴", BAD2, path=os.path.join(_repo, "CHANGELOG.md"))
 _outer = tempfile.mkdtemp()
 with open(os.path.join(_outer, ".korean-writing.json"), "w", encoding="utf-8") as _f:
-    json.dump({"disable": ["K9"]}, _f)
+    json.dump({"disable": ["K6"]}, _f)
 os.makedirs(os.path.join(_outer, "repo", ".git"))
-expect_hit("저장소 루트 위의 설정은 쓰지 않는다", BAD2, "K9", path=os.path.join(_outer, "repo", "a.md"))
+expect_hit("저장소 루트 위의 설정은 쓰지 않는다", BAD2, "K6", path=os.path.join(_outer, "repo", "a.md"))
 _broken = tempfile.mkdtemp()
 os.makedirs(os.path.join(_broken, ".git"))
 with open(os.path.join(_broken, ".korean-writing.json"), "w", encoding="utf-8") as _f:
-    _f.write("{ disable: K9 ")
-expect_hit("깨진 설정은 무시하고 검사한다", BAD2, "K9", path=os.path.join(_broken, "a.md"))
+    _f.write("{ disable: K6 ")
+expect_hit("깨진 설정은 무시하고 검사한다", BAD2, "K6", path=os.path.join(_broken, "a.md"))
 expect_in_output("깨진 설정은 보고에 알린다", BAD2, ["읽지 못해"], path=os.path.join(_broken, "a.md"))
 
 print("\n위치 - 걸린 자리의 줄 번호와 발췌를 붙인다")
-_loc = FILLER + "\n" + FILLER + "\n이것은 성능 문제가 아니라 설정 문제다.\n고칠 곳은 코드가 아니라 문서다.\n필요한 것은 새 기능이 아니라 기준이다.\n"
-expect_in_output("Write 는 내용의 줄 번호", _loc, ["3행", "성능 문제가 아니라", "4행", "5행"])
+_loc = FILLER + "\n" + FILLER + "\n이번 변경은 혁신적이다.\n설계가 획기적이다.\n성능이 압도적이다.\n"
+expect_in_output("Write 는 내용의 줄 번호", _loc, ["3행", "혁신적", "4행", "5행"])
 expect_in_output(
     "코드블록이 있어도 줄 번호가 밀리지 않는다",
-    FILLER + "\n```\n첫째 줄\n둘째 줄\n```\n" + FILLER + "\n이것은 성능 문제가 아니라 설정 문제다. 고칠 곳은 코드가 아니라 문서다. 필요한 것은 새 기능이 아니라 기준이다.\n",
+    FILLER + "\n```\n첫째 줄\n둘째 줄\n```\n" + FILLER + "\n이번 변경은 혁신적이다.\n",
     ["7행"],
 )
 _ed = os.path.join(tempfile.mkdtemp(), "edit.md")
-_new = "이것은 성능 문제가 아니라 설정 문제다.\n고칠 곳은 코드가 아니라 문서다. 필요한 것은 새 기능이 아니라 기준이다."
+_new = "이번 변경은 혁신적이다.\n설계가 획기적이고 성능이 압도적이다."
 with open(_ed, "w", encoding="utf-8") as _f:
     _f.write("# 제목\n\n" + FILLER + "\n\n" + FILLER + "\n\n" + _new + "\n")
 expect_in_output("Edit 는 파일 기준 줄 번호", _new, ["7행", "8행"], path=_ed, tool="Edit", key="new_string")
 expect_in_output(
     "넷째부터는 외 N곳으로 줄인다",
-    FILLER * 2 + "\n" + "\n".join(f"{i}번은 코드가 아니라 문서다." for i in range(5)) + "\n",
+    FILLER * 2 + "\n" + "\n".join(f"{i}번 변경은 혁신적이다." for i in range(5)) + "\n",
     ["외 2곳"],
 )
 expect_in_output(
@@ -377,7 +361,7 @@ expect_in_output(
     tool="Edit", key="new_string",
 )
 
-print("\n누적 - 이번 편집에 있으면 파일 전체 개수로 판정한다 (K1 줄표, K10 연결어미 쉼표)")
+print("\n누적 - 이번 편집에 있으면 파일 전체 개수로 판정한다 (K1 줄표)")
 _dir = tempfile.mkdtemp()
 _acc = os.path.join(_dir, "acc.md")
 with open(_acc, "w", encoding="utf-8") as _f:
@@ -391,25 +375,6 @@ _one = os.path.join(_dir, "one.md")
 with open(_one, "w", encoding="utf-8") as _f:
     _f.write(FILLER * 3 + "가 — 나.\n")
 expect_clean("이번 편집 1개, 파일 전체 1개", FILLER * 3 + "가 — 나.", path=_one, tool="Edit", key="new_string")
-_cm = os.path.join(_dir, "comma.md")
-with open(_cm, "w", encoding="utf-8") as _f:
-    _f.write(FILLER * 2 + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, 로그를 남겼다.\n"
-             + FILLER + "태그를 달았고, 배포를 마쳤다.\n")
-expect_hit(
-    "K10 파일에 5회 있고 이번 편집이 1회를 더해 6회",
-    FILLER + "태그를 달았고, 배포를 마쳤다.",
-    "K10",
-    path=_cm, tool="Edit", key="new_string",
-)
-_cm2 = os.path.join(_dir, "comma2.md")
-with open(_cm2, "w", encoding="utf-8") as _f:
-    _f.write(FILLER * 2 + "훅을 더했고, 규칙을 바꿨고, 테스트를 돌렸고, 문서를 고쳤고, 배지를 올렸고, "
-             "태그를 달았고, 로그를 남겼고, 배포를 마쳤다.\n")
-expect_clean(
-    "K10 파일에 7회 있어도 이번 편집에 없으면 잡지 않는다",
-    FILLER * 3,
-    path=_cm2, tool="Edit", key="new_string",
-)
 
 print("\n형식")
 rc, out = run("결론적으로 축은 두 개고 갈래가 셋이며 레이어도 다르다. 혁신적인 변화다.")
@@ -419,10 +384,10 @@ if "K2" not in out or "K4" not in out:
 else:
     print("  o 복수 위반 동시 보고")
 if "korean-writing" not in out:
-    FAILS.append("교정 안내에 스킬 이름이 없다")
-    print("  x 스킬 지목")
+    FAILS.append("알림에 플러그인 이름이 없다")
+    print("  x 플러그인 이름")
 else:
-    print("  o 교정 안내에 스킬 지목")
+    print("  o 알림에 플러그인 이름")
 
 print("\n이상 입력에 죽지 않는다")
 for label, payload in [

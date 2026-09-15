@@ -27,7 +27,7 @@
     "disabled_rules": {
       "type": "string",
       "title": "끌 검사 규칙",
-      "description": "검사 훅에서 끌 규칙 코드를 쉼표로 적습니다. 예: K1,K9. 비워 두면 K1~K10 을 모두 검사합니다.",
+      "description": "검사 훅에서 끌 규칙 코드를 쉼표로 적습니다. 예: K1,K4. 비워 두면 K1~K4·K6~K8 을 모두 검사합니다.",
       "default": ""
     }
   },

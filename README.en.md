@@ -82,7 +82,7 @@ What the rules are after is easiest to see in the ground truth, before and after
 
 This is what appears in Claude Code after a `.md` edit. The window frame is drawn; from the yellow line down it is the hook's actual output, unchanged.
 
-<p align="center"><img src="docs/hook-output.svg" alt="Hook output flagging K1, K2, K3, K4 and K7" width="860"></p>
+<p align="center"><img src="docs/hook-output.svg" alt="Hook output flagging K1, K2, K3 and K7" width="860"></p>
 
 Each flagged spot carries its line number and an excerpt, so Claude fixes only those spots. This output goes back to Claude too: Claude Code shows the stderr of a PostToolUse hook that exits 2 to Claude in the same turn ([experiment](./docs/experiments/hook-loop/)).
 
@@ -174,9 +174,9 @@ It can be switched off at several scopes, and individual rules can be turned off
 | Scope                | How                                                                                                                                 |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | One file             | `<!-- korean-writing: ignore -->` at the top. For contracts, or a catalog of bad examples, where flagging every time makes no sense |
-| Some rules in one file | `<!-- korean-writing: disable K1 K9 -->` at the top. For a document that uses em dashes on purpose |
+| Some rules in one file | `<!-- korean-writing: disable K1 K4 -->` at the top. For a document that uses em dashes on purpose |
 | A repository         | Commit a `.korean-writing.json` so the whole team shares one standard. Example below                                               |
-| Some rules, persistently | The plugin setting `disabled_rules`, or `KOREAN_WRITING_DISABLE_RULES=K1,K9`                                                  |
+| Some rules, persistently | The plugin setting `disabled_rules`, or `KOREAN_WRITING_DISABLE_RULES=K1,K4`                                                  |
 | Whole session        | `KOREAN_WRITING_HOOK_DISABLED=1`. Turns off the check hook                                         |
 | The whole plugin     | `claude plugin disable korean-writing`                                                                                              |
 
@@ -195,7 +195,7 @@ The Korean judgements are not invented; they rest on three layers.
 
 The base is translation studies. The patterns come from the eight classic kinds of translationese long studied in Korean translation scholarship (inanimate subjects, overuse of the passive, literal pronouns, mechanical `-들` pluralization, literal relative clauses, nominalization, stacked particles, sentence endings) and from international translation theory (Baker 1993 on translation universals, Toury 1995, Toral 2019 on post-editese). On top of that sits an AI-tell taxonomy: im-not-ai's 10 categories and 84 items, from translationese through rhythmic uniformity, over-modification and euphemism, each rated by severity.
 
-The rules are filtered by measurement. im-not-ai measured each pattern's discriminating power on a contrast corpus, rejected patterns that are common in human writing too, and checked model dependence to separate items that only one model pushed up. Items such as the negated antithesis and the comma after a connective ending were re-measured on 532 human-written texts and their thresholds adjusted. This repository filtered the check hook's rules the same way on a corpus of real documents: "죽다" (to die) left K7 because "the server died" is everyday developer speech, and the `~에 대해`/`~를 통해` counts left K8 because they only ever flagged human writing.
+The rules are filtered by measurement. im-not-ai measured each pattern's discriminating power on a contrast corpus, rejected patterns that are common in human writing too, and checked model dependence to separate items that only one model pushed up. Items such as the negated antithesis and the comma after a connective ending were re-measured on 532 human-written texts and their thresholds adjusted. This repository filtered the check hook's rules the same way on a corpus of real documents: "죽다" (to die) left K7 because "the server died" is everyday developer speech, and the `~에 대해`/`~를 통해` counts left K8 because they only ever flagged human writing. A rule that discriminates well was still dropped when its fix made Claude cut sentence components: that is why the negated antithesis, the comma after a connective ending and 첫째·둘째 enumeration left the hook on 2026-09-14.
 
 The documents behind all of this are gathered in [docs/foundations.md](docs/foundations.md) (Korean), which points to the research literature, the taxonomy, the rules this repository wrote, and the harnesses that reproduce the measurements.
 
@@ -207,7 +207,7 @@ Here is what the plugin ships with.
 | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Skills         | 5            | two written here, `korean-writing` and `korean-character-count`, and three vendored from im-not-ai, `humanize-korean`, `humanize`, `humanize-redo` |
 | Hooks          | 2            | a check right after `.md` edits, and a confirmation before Claude calls the `korean-writing` skill |
-| Check patterns | 10           | `K1` to `K10`: em-dashes, abstract structure words, 것 constructions, AI idioms, mechanical enumeration, win/lose and object personification, translationese, negated antithesis, comma after a connective ending |
+| Check patterns | 7            | `K1`–`K4` and `K6`–`K8`: em-dashes, abstract structure words, 것 constructions, AI idioms, win/lose and object personification, translationese |
 | Agents         | 3            | vendored from im-not-ai: diagnosis, rewrite and final review for the polishing pipeline                                                                                                                            |
 | Rulebook       | 84 items     | im-not-ai's taxonomy: 10 categories, each item with a severity and a fix                                                                                                                                           |
 | Ground truth   | 15 sentences | 10 violations Claude Code actually generated, 5 clean sentences from the same context                                                                                                                              |
@@ -227,7 +227,7 @@ Here is what the plugin ships with.
 4. From the tool input it gathers only what was just written. If `<!-- korean-writing: ignore -->` stands on a line of its own in what was written or in the first ten lines of the file, it passes.
 5. It strips code blocks, inline code, URLs, table rows and HTML comments. Table rows go entirely because a document that quotes bad examples must not be flagged for the examples.
 6. If Hangul makes up more than 30% of what is left, all of it is checked; if not, only the lines that are at least 30% Hangul are kept. If fewer than 20 Hangul characters survive, it passes.
-7. The regular expressions `K1` through `K10` run over what remains.
+7. The regular expressions `K1`–`K4` and `K6`–`K8` run over what remains.
 8. With no hits it ends quietly with exit code 0. With hits it writes each item to stderr, with the count and how to fix it, and exits 2. Either way the file is not touched.
 
 | Code  | What                             | What the regex looks for                                                                                    | Fires at                                                     |
@@ -235,15 +235,14 @@ Here is what the plugin ships with.
 | `K1`  | Em-dash interjection             | `—` or `–` with a space and a character on both sides                                                       | 4. If the edit adds at least one, the whole file is counted  |
 | `K2`  | Abstract structure words         | `축이·축은·축을·축으로`, `갈래`, `결이 다르`, `레이어`                                                      | 3                                                            |
 | `K3`  | Translationese 것 constructions | `것들이었`·`것들이다`, `것들을`, `하는 것이 가능`                                                           | 1                                                            |
-| `K4`  | AI idioms                        | `결론적으로`, `종합하면`, `시사하는 바가 크`, `혁신적`, `압도적` and others                                 | 1                                                            |
-| `K5`  | Mechanical enumeration           | `첫째` and `둘째` followed by a comma or period                                                             | both present                                                 |
+| `K4`  | AI idioms                        | `시사하는 바가 크`, `주목할 만하`, `혁신적`·`획기적`·`압도적`                                               | 1                                                            |
 | `K6`  | Win/lose personification         | `~가 이긴다·이깁니다·이겼다·이기고`                                                                         | 2                                                            |
 | `K7`  | Personified objects              | screens, servers, devices and the like that `굳·쓰러지·넘어지·일어서·잠들`; `넘어뜨리·일으켜 세우·쓰러뜨리` | 1                                                            |
-| `K8`  | Translationese                  | `가지고 있`, double passives `되어지·지게 된다`, `에 의해`                                                  | 1 per item, `에 의해` at 2                                   |
-| `K9`  | Negated antithesis               | `~가 아니라`, `~이 아니라`; the conditional `아니라면`·`아니라서` is excluded                               | 3                                                            |
-| `K10` | Comma after a connective ending  | `~하고,`, `~하며,`, `~하지만,`, `~하면서,`, `~아서,`, `~어서,`                                              | 6 and at least 30% of connective endings; whole file counted |
+| `K8`  | Translationese                  | `가지고 있`, the double passive `되어지`, `에 의해`                                                          | 1 per item, `에 의해` at 2                                   |
 
-The em-dash and the connective-ending comma are counted across the whole file. Fixing a document one paragraph at a time adds one or two per edit and dozens to the file, yet no single edit ever reaches the threshold when only the edit is counted. An edit that adds none is never flagged no matter how many the file holds, so editing old documents does not get noisier.
+`K5` mechanical enumeration, `K9` negated antithesis and `K10` comma after a connective ending were removed on 2026-09-14. With the fluent-korean output style on, 4 of 12 replies were flagged by `K5` or `K9`, and the text of that style guide itself was flagged by `K10`. One sample also lost the words that linked a cause to its result when `K9`'s fix split a sentence in two. The same day `K4` dropped connectives such as `결론적으로` and `종합하면` and the hedge `라고 할 수 있다`, and `K8` dropped the auxiliary `지게 된다`. Removed numbers are not reused, so a `K9` left in a setting turns off nothing ([EVALUATION.md](EVALUATION.md) section O).
+
+The em-dash is counted across the whole file. Fixing a document one paragraph at a time adds one or two per edit and dozens to the file, yet no single edit ever reaches the threshold when only the edit is counted. An edit that adds none is never flagged no matter how many the file holds, so editing old documents does not get noisier.
 
 Thresholds are one step above the rulebook's. It informs rather than blocks, because flagging a sound sentence and breaking someone's flow does more harm than missing one.
 
@@ -283,7 +282,7 @@ The skill was compared blind against im-not-ai's polished output. The direction 
 
 - **Ordinary replies get no rules.** Up to v1.1.0 reply rules were injected when a session opened and when a subagent started. Style improved, but replies were measured losing details such as default values, so the injection was removed ([EVALUATION.md](./EVALUATION.md) H13). The style of conversation outside writing requests is no longer this plugin's job.
 - The check hook looks only at `.md` files. Korean comments and strings inside code, and replies that go straight out to Slack, have no check afterwards.
-- The regular expressions catch ten known markers. New kinds of awkwardness have to be found by a person and added.
+- The regular expressions catch seven known markers. New kinds of awkwardness have to be found by a person and added.
 - Only what the hook flags gets fixed; anything it misses stays.
 - Contracts, terms of service, legal documents and official letters are out of scope; formality is their requirement. Code, logs, commands, quotations, proper nouns and English source text are left alone.
 - Spelling and spacing are not checked. Style only.
@@ -297,7 +296,7 @@ korean-writing/
 ├── plugin/                the shipped plugin; only this folder reaches other machines
 │   ├── .claude-plugin/    manifest (name, version source of truth, skill paths)
 │   ├── hooks/             registers PreToolUse (Skill) and PostToolUse
-│   ├── hooks-handlers/    confirm before the skill applies; check after a .md edit (K1-K10)
+│   ├── hooks-handlers/    check after a .md edit (K1–K4, K6–K8)
 │   ├── SKILL.md           the korean-writing skill
 │   ├── output-styles/     an opt-in reply style (off by default)
 │   ├── agents/·skills/    vendored im-not-ai polishing + the counting skill

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """첫 Write(교정 전)와 최종 doc.md(교정 후)를 견준다. 훅이 걸려 고친 표본만 판정자에게 보낸다.
 
-stream-json 에는 훅 알림이 남지 않는다. 걸렸는지는 첫 Write 의 내용에 훅을 다시 돌려 본다.
+stream-json 에는 훅 알림이 남지 않는다. 걸렸는지는 첫 Write 의 내용에 그 표본을 만든 훅을 다시 돌려 본다.
+훅 경로는 표본 폴더의 settings.json 에서 읽는다. 저장소의 훅으로 다시 돌리면 옛 훅으로 만든 표본이 새 규칙으로 걸러진다.
 판정 캐시는 실행 폴더마다 따로 둔다. 이름만으로 두었더니 같은 이름의 다른 모델 표본이 앞 판정을 받아 왔다.
 
 usage: analyze.py <실행 폴더> [--no-judge]    실행 폴더는 이 파일 기준 경로(예: out/run-20260911-170000)
@@ -54,13 +55,24 @@ def first_write(stream):
     return v0, edits
 
 
-def flags(text):
-    """첫 Write 에 저장소의 훅을 다시 돌려 걸린 코드를 얻는다. 걸리는지는 안내 문구와 관계없다."""
+def hook_of(sample):
+    """표본을 만들 때 쓴 훅. settings.json 이 없거나 그 경로가 사라졌으면 저장소의 훅."""
+    try:
+        cmd = json.loads((sample / "settings.json").read_text())["hooks"]["PostToolUse"][0]["hooks"][0]["command"]
+        if pathlib.Path(cmd).exists():
+            return pathlib.Path(cmd)
+    except Exception:
+        pass
+    return HOOK
+
+
+def flags(text, hook=HOOK):
+    """첫 Write 에 훅을 다시 돌려 걸린 코드를 얻는다."""
     with tempfile.TemporaryDirectory() as d:
         p = pathlib.Path(d) / "doc.md"
         p.write_text(text, encoding="utf-8")
         payload = json.dumps({"tool_name": "Write", "tool_input": {"file_path": str(p), "content": text}})
-        r = subprocess.run([str(HOOK)], input=payload, capture_output=True, text=True,
+        r = subprocess.run([str(hook)], input=payload, capture_output=True, text=True,
                            env={"PATH": "/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin"})
     return re.findall(r"^\s+(K\d+)\s+(.*?) —", r.stderr, re.M)
 
@@ -68,8 +80,9 @@ def flags(text):
 PROMPT = """아래 [원본]과 [수정본]은 같은 글이다. 수정본은 문체만 고치라는 지적을 받고 고친 판이다. 도구는 없다. 두 글만 보고 답하라.
 원본에 담긴 정보 가운데 수정본에서 사라진 것을 모두 찾아라. 정보란 사실·수치·날짜·대상·조건·예외·이유·예시·절차 단계·주의사항·대비(무엇이 아닌지)다.
 표현이나 어순만 바뀌고 뜻이 남아 있으면 사라진 것이 아니다. 뜻은 남았지만 강조나 뉘앙스가 약해진 것은 weakened 에 따로 적는다. 원본에 없던 정보가 생겼으면 added 에 적는다.
+정보와 따로, 원본에 있던 문장 성분이 수정본에서 빠져 문장 사이의 관계나 뜻이 흐려진 곳을 omitted 에 적는다. 조사·어미·접속 표현(그래서·다만·때문에 같은 이유·조건·대비를 잇는 말)·주어·목적어·부사어가 대상이다. 중복 표현이나 줄표를 지운 것처럼 뜻과 관계가 그대로 남으면 적지 않는다.
 JSON 객체 하나만 출력한다:
-{{"missing":[{{"원본":"원본의 해당 구절 그대로","무엇":"사라진 정보 한 줄"}}],"weakened":[{{"원본":"...","무엇":"..."}}],"added":["..."]}}
+{{"missing":[{{"원본":"원본의 해당 구절 그대로","무엇":"사라진 정보 한 줄"}}],"weakened":[{{"원본":"...","무엇":"..."}}],"added":["..."],"omitted":[{{"원본":"...","수정본":"...","무엇":"빠진 성분과 흐려진 관계 한 줄"}}]}}
 
 [원본]
 {a}
@@ -114,7 +127,7 @@ for o in sorted((HERE / RUNS).iterdir()):
         print(f"{o.name}: 첫 Write 또는 최종 파일 없음")
         continue
     (o / "v0.md").write_text(v0, encoding="utf-8")
-    rows.append(dict(name=o.name, v0=v0, fin=fin, edits=edits, flags=flags(v0)))
+    rows.append(dict(name=o.name, v0=v0, fin=fin, edits=edits, flags=flags(v0, hook_of(o))))
 
 todo = [r for r in rows if r["flags"] and r["v0"] != r["fin"]]
 if "--no-judge" not in sys.argv:
@@ -127,16 +140,20 @@ for r in rows:
     ks = ",".join(k for k, _ in r["flags"]) or "-"
     line = f"{r['name']:28} 훅 {ks:16} 교정편집 {r['edits']}  한글 {hangul(r['v0'])}→{hangul(r['fin'])}"
     if j:
-        line += f"  사라짐 {len(j.get('missing', []))} 약해짐 {len(j.get('weakened', []))} 생김 {len(j.get('added', []))}"
+        line += (f"  사라짐 {len(j.get('missing', []))} 약해짐 {len(j.get('weakened', []))} 생김 {len(j.get('added', []))}"
+                 f" 성분 빠짐 {len(j.get('omitted', []))}")
     print(line)
     for m in j.get("missing", []):
         print(f"        - 사라짐: {m.get('무엇')}  ⟵ 「{m.get('원본')}」")
     for m in j.get("weakened", []):
         print(f"        · 약해짐: {m.get('무엇')}  ⟵ 「{m.get('원본')}」")
+    for m in j.get("omitted", []):
+        print(f"        ~ 성분 빠짐: {m.get('무엇')}  「{m.get('원본')}」 → 「{m.get('수정본')}」")
 
 lost = sum(len((r.get("judge") or {}).get("missing", [])) for r in todo)
 unjudged = [r["name"] for r in todo if r.get("judge") is None]
-print(f"\n표본 {len(rows)}  훅 걸림 {sum(1 for r in rows if r['flags'])}  교정된 것 {len(todo)}  사라진 정보 합계 {lost}")
+omit = sum(len((r.get("judge") or {}).get("omitted", [])) for r in todo)
+print(f"\n표본 {len(rows)}  훅 걸림 {sum(1 for r in rows if r['flags'])}  교정된 것 {len(todo)}  사라진 정보 합계 {lost}  성분 빠짐 합계 {omit}")
 if unjudged and "--no-judge" not in sys.argv:
     print("판정 못 한 표본: " + ", ".join(unjudged))
 sys.exit(1 if lost or (unjudged and "--no-judge" not in sys.argv) else 0)

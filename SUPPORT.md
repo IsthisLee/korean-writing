@@ -7,7 +7,7 @@
 | 상황                                            | 가는 곳                                                                                                        |
 | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | 설치와 사용법을 모르겠다                        | [README](README.md) 의 설치 절부터 봅니다                                                                        |
-| 훅이 왜 이 문장을 걸었는지 모르겠다             | [EVALUATION.md](EVALUATION.md) 에 판정 규칙 K1~K10 과 각각의 실측 근거가 있습니다                                |
+| 훅이 왜 이 문장을 걸었는지 모르겠다             | [EVALUATION.md](EVALUATION.md) 에 판정 규칙(K 코드)과 각각의 실측 근거가 있습니다                                |
 | 훅을 끄고 싶다                                  | `/plugin` 에서 `edit_check` 를 끕니다. 환경변수도 듣습니다([SECURITY.md](SECURITY.md))                          |
 | 사람이 쓴 문장을 훅이 잘못 걸었다               | [오탐 이슈](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml)          |
 | 훅이 놓친 AI 티가 있다                          | [규칙 제안 이슈](https://github.com/IsthisLee/korean-writing/issues/new?template=rule.yml)                 |
@@ -35,7 +35,7 @@ Where to go depends on what you need. Please pick from this list before opening 
 | Situation                                     | Where to go                                                                                                       |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | Installing or using the plugin                | Start with the install section of the [README](README.en.md)                                                        |
-| Not sure why the hook flagged a sentence      | [EVALUATION.md](EVALUATION.md) lists rules K1–K10 and the measurements behind each                                  |
+| Not sure why the hook flagged a sentence      | [EVALUATION.md](EVALUATION.md) lists the K rules and the measurements behind each                                  |
 | You want to turn the hook off                 | Toggle `edit_check` in `/plugin`. Environment variables work too ([SECURITY.md](SECURITY.md))                     |
 | The hook flagged human-written prose          | [False positive](https://github.com/IsthisLee/korean-writing/issues/new?template=awkward-sentence.yml)        |
 | The hook missed an AI tell                    | [Rule proposal](https://github.com/IsthisLee/korean-writing/issues/new?template=rule.yml)                     |

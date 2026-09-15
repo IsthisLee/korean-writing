@@ -6,19 +6,22 @@
 #         미만이면 한글 비중 30% 이상인 줄만 모아 검사한다 (영어 문서 안의 한국어 문단)
 # 제외  : 코드블록(``` 과 ~~~), 인라인 코드, 링크 URL, 표 행, HTML 주석
 # 임계  : 스킬(korean-writing)의 권고보다 느슨하게 잡는다. 오탐으로 작업을 막지 않기 위해서다.
-# 누적  : 줄표(K1)와 연결어미 뒤 쉼표(K10)는 이번 편집에 하나라도 있으면 파일 전체로 판정한다. 문단
-#         하나씩 고치는 동안 쌓이는 것을 잡기 위해서다. 이번 편집에 없으면 파일에 아무리 많아도 잡지 않는다.
+# 누적  : 줄표(K1)는 이번 편집에 하나라도 있으면 파일 전체로 판정한다. 문단 하나씩 고치는 동안
+#         쌓이는 것을 잡기 위해서다. 이번 편집에 없으면 파일에 아무리 많아도 잡지 않는다.
 # 위치  : 걸린 자리를 셋까지 파일의 줄 번호와 짧은 발췌로 붙인다. 모델이 그 자리만 고치게 하려는 것이다.
 #         판정(코드와 횟수)은 위치 찾기와 따로 계산한다. 위치를 못 찾아도 판정은 같다.
-# 코드  : K1 줄표 · K2 추상 구조어 · K3 것 구문 · K4 AI 관용구 · K5 첫째둘째 · K6 승패 의인화
-#         K7 사물 의인화 · K8 번역투 · K9 부정 대구 · K10 연결어미 뒤 쉼표
+# 코드  : K1 줄표 · K2 추상 구조어 · K3 것 구문 · K4 AI 관용구 · K6 승패 의인화 · K7 사물 의인화 · K8 번역투
+#         K5 첫째둘째 · K9 부정 대구 · K10 연결어미 뒤 쉼표는 2026-09-14 에 뺐다(EVALUATION.md O 절).
+#         뺀 번호는 다시 쓰지 않는다. 예전 설정에 적힌 코드가 엉뚱한 규칙을 끄게 되기 때문이다.
+# 안내  : 고치는 법은 문장 성분을 빼서 줄이라고 시키지 않는다. 조사·어미·접속 표현을 살려 쓰라는 문체 지침
+#         (fluent-korean 문장 단위 1, 구 단위 1)과 부딪히지 않게 하려는 것이다.
 #
 # 끄기  : 세션 전체    환경변수 KOREAN_WRITING_HOOK_DISABLED=1, 플러그인 설정 edit_check=false
-#         규칙 몇 개    환경변수 KOREAN_WRITING_DISABLE_RULES=K1,K9, 플러그인 설정 disabled_rules
+#         규칙 몇 개    환경변수 KOREAN_WRITING_DISABLE_RULES=K1,K4, 플러그인 설정 disabled_rules
 #         저장소 단위   편집한 파일에서 위로 올라가며 처음 만나는 .korean-writing.json 의 "disable"(규칙 코드)과
 #                       "ignore"(그 파일이 있는 폴더 기준 경로 패턴). .git 이 있는 폴더에서 멈춘다
 #         파일 하나     파일 머리 10줄 안에 한 줄로 선 <!-- korean-writing: ignore --> 나
-#                       <!-- korean-writing: disable K1 K9 -->
+#                       <!-- korean-writing: disable K1 K4 -->
 #         scripts/check.sh 는 세션 전체 끄기만 걷어내고 부른다. 부르는 것 자체가 검사하라는 뜻이다.
 
 set -uo pipefail
@@ -69,7 +72,8 @@ raw = "\n".join(parts)
 if not raw:
     sys.exit(0)
 
-CODES = ("K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10")
+# 뺀 번호(K5·K9·K10)는 목록에 없다. 설정에 적혀 있으면 모르는 코드처럼 버린다.
+CODES = ("K1", "K2", "K3", "K4", "K6", "K7", "K8")
 
 def codes_in(text):
     # 쉼표·공백 어느 쪽으로 나눠 적어도 되고 대소문자를 가리지 않는다. 모르는 코드는 버린다.
@@ -82,7 +86,7 @@ except Exception:
 
 # 파일 단위 끄기. 문서 머리에 <!-- korean-writing: ignore --> 를 한 줄로 두면 검사하지 않는다.
 # 격식 문서(계약·약관)나 나쁜 예를 모아 둔 규칙집처럼 매번 걸리는 것이 맞지 않는 파일용이다.
-# <!-- korean-writing: disable K1 K9 --> 는 그 규칙만 끈다. 줄표를 일부러 쓰는 문서처럼 한두 규칙만 맞지 않을 때다.
+# <!-- korean-writing: disable K1 K4 --> 는 그 규칙만 끈다. 줄표를 일부러 쓰는 문서처럼 한두 규칙만 맞지 않을 때다.
 #
 # 줄 하나로 선 표시만 지시로 본다. 예전에는 문자열이 어디에 있든 껐는데, 그러면 이 기능을
 # 설명하는 문서가 자기 검사를 통째로 건너뛴다. 이 저장소의 README·CLAUDE.md·CHANGELOG 등
@@ -187,7 +191,7 @@ if body is None:
 
 hits = []
 
-# 파일 전체 본문. 문단 하나씩 고치는 동안 쌓이는 패턴(K1 줄표, K10 연결어미 쉼표)을 위해 한 번만 읽는다.
+# 파일 전체 본문. 문단 하나씩 고치는 동안 쌓이는 패턴(K1 줄표)을 위해 한 번만 읽는다.
 # Write 는 이번 내용이 곧 파일 전체라 다시 읽지 않는다.
 _FILE_BODY = []
 
@@ -214,7 +218,7 @@ if n >= 1:
         n_file = max(n, len(re.findall(DASH, fbody)))
 if n_file >= 4:
     what = f"줄표(—) 삽입구 {n}개" if n_file == n else f"줄표(—) 삽입구 이번 편집 {n}개, 파일 전체 {n_file}개"
-    hits.append(("K1", what, "쉼표나 문장 분리로 바꾼다. 한국어에서 가장 강한 AI 티다", [DASH], "edit" if n_file == n else "file"))
+    hits.append(("K1", what, "앞뒤 문장의 관계를 드러내는 접속사나 콜론으로 바꾼다. 문장을 나누더라도 둘을 잇는 말은 남긴다", [DASH], "edit" if n_file == n else "file"))
 
 # K2 추상 구조어
 # 축은 압축·건축 등에 섞이므로 앞 글자가 한글이면 제외한다.
@@ -229,15 +233,16 @@ m = re.findall(K3, body)
 if m:
     hits.append(("K3", f"번역투 것 구문 {len(m)}회", "구체 명사로 바꾼다. 예: 탈이 날 것들이었다 → 탈이 날 문제였다", [K3], "edit"))
 
-# K4 AI 관용구
-K4 = r"결론적으로|종합하면|요약하자면|중요한 점은|시사하는 바가 크|주목할 만하|혁신적|획기적|압도적|라고 할 수 있(?:습니다|다)"
+# K4 AI 관용구. 근거 없이 크기만 말하는 평가 수식을 본다.
+# 결론적으로·종합하면·요약하자면·중요한 점은 과 「라고 할 수 있다」는 2026-09-14 에 뺐다. 처방이 접속 표현을
+# 지우고 양태 표현을 줄이라는 것이라, 조사·어미·보조 용언을 살려 쓰라는 문체 지침과 정면으로 부딪혔다.
+K4 = r"시사하는 바가 크|주목할 만하|혁신적|획기적|압도적"
 m = re.findall(K4, body)
 if m:
-    hits.append(("K4", f"AI 관용구 {len(m)}회", "결론적으로·요약하자면 같은 표지는 지운다. 「~라고 할 수 있다」는 원문이 이미 단정한 내용일 때만 「~이다」로 줄이고 아니면 「~로 보인다」로 둔다. 유보를 단정으로 올리지 않는다", [K4], "edit"))
+    hits.append(("K4", f"AI 관용구 {len(m)}회", "원문에 근거가 있으면 수식 대신 그 근거를 적고, 없으면 담담한 평가어로 바꾼다. 없는 수치나 사실을 지어내지 않는다", [K4], "edit"))
 
-# K5 기계적 병렬
-if re.search(r"첫째[,.]", body) and re.search(r"둘째[,.]", body):
-    hits.append(("K5", "첫째·둘째 병렬", "열거가 내용의 뼈대면 순서와 개수를 두고 표지만 바꾼다(우선·이어서·마지막으로). 장식일 때만 서술문으로 녹인다", [r"첫째[,.]", r"둘째[,.]"], "edit"))
+# K5 기계적 병렬(첫째·둘째)은 2026-09-14 에 뺐다. 순서와 개수가 뜻인 열거에서는 표지가 정보이고,
+# fluent-korean 을 켠 답변 12개 중 4개가 이 규칙에 걸렸다(EVALUATION.md O 절).
 
 # K6 승패 의인화. 정답 데이터 G06(Claude Code 의 실제 생성물)에 있는 패턴.
 # 한 문서 1회는 허용하고 2회부터 잡는다(EVALUATION 4번).
@@ -264,54 +269,19 @@ tr, k8 = [], []
 n_ga = len(re.findall(r"가지고\s*있", body))
 if n_ga:
     tr.append(f"가지고 있다 {n_ga}회"); k8.append(r"가지고\s*있")
-n_pas = len(re.findall(r"되어지|지게\s*된다|되어진다", body))
+# 「지게 된다」는 2026-09-14 에 뺐다. 「알려지게 된다」의 「-게 되다」는 상태가 바뀌었다는 뜻을 더하는 보조 용언이다.
+n_pas = len(re.findall(r"되어지", body))
 if n_pas:
-    tr.append(f"이중 피동 {n_pas}회"); k8.append(r"되어지|지게\s*된다|되어진다")
+    tr.append(f"이중 피동 {n_pas}회"); k8.append(r"되어지")
 n_uy = len(re.findall(r"에\s*의해", body))
 if n_uy >= 2:
     tr.append(f"~에 의해 {n_uy}회"); k8.append(r"에\s*의해")
 if tr:
-    hits.append(("K8", " / ".join(tr), "능동으로 바꾸거나 조사를 구체화한다", k8, "edit"))
+    hits.append(("K8", " / ".join(tr), "되어지다는 되다로 쓴다. 가지고 있다는 「~에게 ~이 있다」처럼 풀어 쓴다. ~에 의해는 행위 주체를 밝히거나 조사를 구체화하고, 주체를 모르면 지어내지 않는다", k8, "edit"))
 
-# K9 부정 대구 "A가 아니라 B" (im-not-ai taxonomy C-8)
-# 그 규칙집에서 실측 판별력이 가장 큰 항목이다. 사람 대비 밀도 9.2배, 개인 블로그 대비 18배이고
-# 세 모델과 세 과업 조건에서 모두 재현됐다. 규칙집의 임계는 2회지만 훅은 3회부터 잡는다.
-# 이 머신의 한국어 .md 205개 실측에서 3회 이상은 2023년 이전 문서 0/32, 2026년 문서 30/173 이다.
-# 정규식은 규칙집 구현(metrics_v2._ANTITHESIS_RE)을 따르되 조건절 "아니라면"·"아니라서"만 뺐다. 대구가
-# 아니라 가정이다. 생성물 실측에서 "일요일 기준이 아니라면"이 대구로 잡혔다. 문서 205개 판정은 그대로다.
-# 대안을 더 넓히는 쪽(것은 아니다·인가,)도 재 봤는데 2026년 적중이 하나 늘고 2회 임계에서 오탐이 하나 났다.
-K9 = r"(?:가|이)\s*아니라(?![면서])|이기\s*이전에|되기\s*이전에|이기보다"
-m = re.findall(K9, body)
-if len(m) >= 3:
-    hits.append(("K9", f"부정 대구 {len(m)}회", "부정한 쪽의 정보는 버리지 않고 문장을 둘로 나눈다. 예: 도구가 아니라 방식이 바뀐다 → 도구는 그대로다. 바뀌는 것은 방식이다. 힘 있는 대구 한두 개는 남긴다", [K9], "edit"))
-
-# K10 연결어미 뒤 쉼표 (im-not-ai taxonomy C-11)
-# 그 규칙집에서 단일 지표 분리도가 가장 큰 항목이다(KatFish ACL 2025, 에세이 사람 4.10% 대 AI 19.83%).
-# 한국어는 연결어미가 이미 호흡을 끊으므로 쉼표를 덧붙일 자리가 드문데, 영어 감각이 옮으면 자동으로 찍는다.
-# 개수만 보면 긴 문서가 불리하고 비율만 보면 짧은 문서가 불리해 둘 다 넘을 때만 잡는다.
-# 이 머신 실측에서 6회 이상이면서 30% 이상은 2023년 이전 문서 0/32, 2026년 문서 21/173 이다.
-# 줄표와 같은 이유로 파일 전체로 판정한다. 문단씩 고치는 동안 쌓이는 것이 이 패턴의 실제 모습이다.
-ENDING = r"(?:고|며|지만|면서|아서|어서)"
-K10 = ENDING + r"\s*,"
-
-def comma_ratio(t):
-    total = len(re.findall(ENDING + r"(?=[\s,\.!?、。]|$)", t))
-    return len(re.findall(K10, t)), total
-
-n, total = comma_ratio(body)
-n_file, total_file = n, total
-if n >= 1:
-    fbody = file_body()
-    if fbody is not None:
-        fn, ft = comma_ratio(fbody)
-        if fn > n:
-            n_file, total_file = fn, ft
-if n_file >= 6 and total_file and n_file / total_file >= 0.30:
-    pct = round(n_file / total_file * 100)
-    what = f"연결어미 뒤 쉼표 {n_file}회 (연결어미의 {pct}%)"
-    if n_file != n:
-        what = f"연결어미 뒤 쉼표 이번 편집 {n}회, 파일 전체 {n_file}회 (연결어미의 {pct}%)"
-    hits.append(("K10", what, "쉼표를 지운다. 예: 훅을 더했고, 규칙집을 바꿨다 → 훅을 더했고 규칙집을 바꿨다", [K10], "edit" if n_file == n else "file"))
+# K9 부정 대구와 K10 연결어미 뒤 쉼표는 2026-09-14 에 뺐다(EVALUATION.md O 절). K9 처방대로 문장을 둘로
+# 나누다 인과를 잇는 말이 끊긴 표본이 있었고(I1 재측정), K10 은 fluent-korean 지침 원문의 쉼표에도 걸렸다.
+# 판별력은 컸지만(C-8, C-11) 알림을 받은 모델이 고치는 방식이 문장 성분을 살리라는 지침과 맞지 않았다.
 
 hits = [h for h in hits if h[0] not in disabled]
 if not hits:
@@ -403,6 +373,7 @@ for code, what, how, pats, where in hits:
     if len(locs) > SHOW:
         print(f"      외 {len(locs) - SHOW}곳", file=sys.stderr)
 print("  걸린 표현만 고친다. 수치·개수·조건·유보 표현과 걸리지 않은 문장은 그대로 둔다.", file=sys.stderr)
-print("  교정 규칙은 korean-writing 스킬에 있다. 격식 문서(계약·약관·법률)면 파일 머리에 <!-- korean-writing: ignore --> 를 넣으면 다시 알리지 않는다.", file=sys.stderr)
+print("  고칠 때 조사·어미·접속 표현이나 주어·목적어를 빼서 문장을 줄이지 않는다. 문장 사이의 관계는 말로 남긴다.", file=sys.stderr)
+print("  격식 문서(계약·약관·법률)면 파일 머리에 <!-- korean-writing: ignore --> 를 넣으면 다시 알리지 않는다.", file=sys.stderr)
 sys.exit(2)
 '
