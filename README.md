@@ -288,7 +288,7 @@ korean-writing/
 ├── tests/                 ── 아래는 저장소에만 있습니다 ──
 │                          회귀 테스트와 정답 데이터
 ├── tools/                 관리자 스크립트(가드·릴리스·측정·그림)
-├── docs/                  그림(assets), 실험, 표본, foundations.md
+├── docs/                  그림(assets), 분석 문서(analysis), 실험, 표본, foundations.md
 ├── EVALUATION.md          합격 기준과 측정 결과
 ├── CLAUDE.md              이 저장소에서 작업하는 Claude의 규칙
 └── README.md·README.en.md
@@ -309,6 +309,8 @@ korean-writing/
 2026-09-11에 각 저장소를 열어 확인한 내용입니다. 빈칸은 그 시점을 맡는 기능을 찾지 못했다는 뜻입니다. 저장할 때의 검사는 patina에도 있지만 patina는 사람이 커밋할 때 걸리고 이 플러그인은 Claude가 파일을 고친 그 턴에 걸립니다.
 
 평소 답변을 맡는 output style은 이 플러그인이 싣지 않습니다. fluent-korean 같은 스타일을 켜 두어도 검사 훅과 윤문은 그대로 동작합니다.
+
+위 표는 기능만 비교한 것입니다. 한국어 output style과 윤문 도구 가운데 무엇이 뜻을 잃지 않으면서 AI 티가 적은 글을 만드는지는 사람이 쓴 글과 AI 글을 표본으로 직접 재는 중입니다. 무엇을 어떻게 비교하는지와 지금까지 알아낸 것은 [비교 분석 안내](docs/analysis/README.md)에 쉽게 정리해 두었습니다.
 
 ## 자주 묻는 질문
 

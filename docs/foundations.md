@@ -33,6 +33,7 @@
 | 검사 규칙(K 코드) | [posttooluse.sh](../plugin/hooks-handlers/posttooluse.sh) 208~284행                  | 코드마다 정규식과 임계와 처방이 한 줄씩 붙어 있습니다                                                                             |
 | 사람이 읽는 판정 정본 | [README.md](../README.md) 「판정 규칙」                                                   | 판정 순서 여덟 단계와 코드별 표                                                                                         |
 | 측정에 쓴 문체 지침 | [experiments/output-style/korean-writing.md](experiments/output-style/korean-writing.md) | M·N 절 측정에 쓴 output style. 2026-09-14 에 플러그인에서 뺐고 재현용으로만 둡니다 |
+| 분석 계획        | [analysis/korean-ai-writing-signals.md](analysis/korean-ai-writing-signals.md)      | 한국어 AI 글 신호 분석과 플러그인 비교의 사전 등록 계획. 표본, 기준, 출처를 결과보다 먼저 적었습니다 |
 | 측정 기록        | [EVALUATION.md](../EVALUATION.md) A~O절                                              | 훅 정확도, 스킬 트리거, 비용, 주입이 일을 방해하는가, 블라인드 판정의 신뢰도, output style의 세부 보존, 검사 훅 처방의 문장 성분 보존                                         |
 | 재현 장비        | [docs/experiments/](experiments/)                                                   | `always-on`, `detail-retention`, `hook-loop`, `output-style`, `skill-vs-imnotai` 다섯 폴더 |
 | 출처와 수정 범위    | [plugin/NOTICE.md](../plugin/NOTICE.md)                                             | 가져온 파일 목록과 고정한 커밋                                                                                          |

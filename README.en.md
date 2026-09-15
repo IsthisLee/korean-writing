@@ -286,7 +286,7 @@ korean-writing/
 ├── tests/                 everything below stays in the repository:
 │                          regression tests and ground truth
 ├── tools/                 maintainer scripts (guard, release, measure, images)
-├── docs/                  images (assets), experiments, samples, foundations.md
+├── docs/                  images (assets), analysis documents, experiments, samples, foundations.md
 ├── EVALUATION.md          pass criteria and measurements
 ├── CLAUDE.md              rules for Claude working in this repository
 └── README.md·README.en.md
@@ -307,6 +307,8 @@ There are already several tools that make Korean read naturally. The most widely
 Checked against each repository on 2026-09-11. A blank cell means no feature for that moment was found. patina also checks on save, but at a different moment: patina runs when a person commits, this plugin runs in the turn where Claude edited the file.
 
 This plugin does not ship an output style for ordinary answers. With a style such as fluent-korean's turned on, the check hook and the polishing keep working.
+
+The table above compares features only. Which Korean output styles and polishing tools produce text with fewer AI tells without losing meaning is being measured directly on human-written and AI-written samples. What is compared, how, and what has been found so far is explained in plain language in the [comparison guide](docs/analysis/README.md) (Korean).
 
 ## FAQ
 
