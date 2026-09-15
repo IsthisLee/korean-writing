@@ -61,9 +61,7 @@ io.open(p, "w", encoding="utf-8").write(s)
 PY
 
 # 3. README 릴리스 인용구
-for f in README.md; do
-  grep -q "v$VER" "$f" || fail "$f 상단 릴리스 인용구에 v$VER 이 없다. 릴리스 노트를 먼저 쓴다"
-done
+grep -q "v$VER" README.md || fail "README.md 상단 릴리스 인용구에 v$VER 이 없다. 릴리스 노트를 먼저 쓴다"
 
 # 4. 버전 반영
 python3 - "$VER" <<'PY'
